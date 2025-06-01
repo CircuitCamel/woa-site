@@ -12,7 +12,7 @@ func StartServer(port string) {
 	mux.HandleFunc("/", notfound)
 	mux.HandleFunc("/sessions", woa.SessionHandler)
 	mux.HandleFunc("/rules", woa.Rules)
-	mux.HandleFunc("/cast", woa.Cast)
+	mux.HandleFunc("/characters", woa.CharacterHandler)
 
 	mux.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("./website"))))
 

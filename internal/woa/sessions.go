@@ -10,7 +10,14 @@ import (
 )
 
 func SessionHandler(w http.ResponseWriter, r *http.Request) {
-	sessionDetailHandler(w, r)
+	id := r.URL.Query().Get("id")
+	if id == "" {
+		// No ID provided — serve sessions list
+		sessions(w, r)
+		return
+	} else {
+		sessionDetailHandler(w, r)
+	}
 }
 
 func sessions(w http.ResponseWriter, r *http.Request) {
@@ -27,11 +34,6 @@ func sessions(w http.ResponseWriter, r *http.Request) {
 
 func sessionDetailHandler(w http.ResponseWriter, r *http.Request) {
 	id := r.URL.Query().Get("id")
-	if id == "" {
-		// No ID provided — serve sessions list
-		sessions(w, r)
-		return
-	}
 
 	sessionID, _ := strconv.Atoi(id)
 
@@ -52,7 +54,7 @@ func sessionDetailHandler(w http.ResponseWriter, r *http.Request) {
 
 	databytes, _ := os.ReadFile(selected.Path)
 
-	selected.Data = util.MdToHTML(databytes)
+	selected.Body = util.MdToHTML(databytes)
 
 	tmpl.Execute(w, selected)
 }

@@ -41,3 +41,71 @@ body {
 	width:42px;
 	height:42px;
 }
+
+.character-container {
+	max-width: 800px;
+	margin: 20px auto;
+	padding: 20px;
+	background-color: #001a33;
+	border-radius: 10px;
+	box-shadow: 0 0 10px rgba(0,0,0,0.5);
+}
+
+.character-info p {
+	margin: 5px 0;
+	font-size: 18px;
+}
+
+.character-info strong {
+	color: #ffffff;
+}
+
+.character-body {
+	margin-top: 20px;
+	line-height: 1.6;
+}
+
+.wiki-container {
+	max-width: 800px;
+	margin: 30px auto;
+	padding: 20px;
+	background-color: #001a33;
+	border-radius: 10px;
+	box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);
+	line-height: 1.7;
+}
+
+.wiki-container h1,
+.wiki-container h2,
+.wiki-container h3 {
+	color: #d3d3d3;
+	margin-top: 20px;
+	margin-bottom: 10px;
+}
+
+.wiki-container p {
+	margin-bottom: 10px;
+	font-size: 17px;
+}
+
+.wiki-container ul {
+	margin-left: 20px;
+	margin-bottom: 10px;
+}
+
+.wiki-container li {
+	margin-bottom: 5px;
+}
+
+.character-summary {
+    background-color: #002244;
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+}
+
+.character-summary p {
+    margin: 5px 0;
+    font-size: 16px;
+}
