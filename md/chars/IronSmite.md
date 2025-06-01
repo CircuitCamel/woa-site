@@ -3,6 +3,7 @@ Player: Adel Adwan
 Race: Human
 Class: Monk/Paladin
 Age: 29
+Level: 4
 ---
 
 ## Early Life 

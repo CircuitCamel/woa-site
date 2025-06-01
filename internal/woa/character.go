@@ -89,6 +89,8 @@ func loadCharacterMarkdown(path string) (Character, error) {
 					c.Class = val
 				case "Age":
 					c.Age = val
+				case "Level":
+					c.Level = val
 				}
 			}
 		} else {

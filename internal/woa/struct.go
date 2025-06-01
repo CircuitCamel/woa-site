@@ -17,5 +17,6 @@ type Character struct {
 	Race  string
 	Class string
 	Age   string
+	Level string
 	Body  string
 }
