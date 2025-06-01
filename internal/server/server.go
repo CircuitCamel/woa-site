@@ -3,13 +3,16 @@ package server
 import (
 	"fmt"
 	"net/http"
-	woa "warofages/internal/woa/mainpage"
+	"warofages/internal/woa"
 )
 
 func StartServer(port string) {
 	mux := http.NewServeMux()
 
 	mux.HandleFunc("/", notfound)
+	mux.HandleFunc("/sessions", woa.Sessions)
+	mux.HandleFunc("/rules", woa.Rules)
+	mux.HandleFunc("/cast", woa.Cast)
 
 	mux.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("./website"))))
 

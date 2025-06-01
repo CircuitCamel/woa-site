@@ -1,0 +1,43 @@
+button {
+	color: #d3d3d3;
+	background-color: #363637;
+	font-size: 19px;
+	padding: 15px 50px;
+	cursor: pointer;
+	border: none;
+	width: 100%
+}
+
+button:hover {
+	color: #363637;
+	background-color: #d3d3d3;
+}
+
+body {
+	background-color: #000d1a;
+	color: #d3d3d3;
+	font-family: Arial
+}
+
+.buttondiv {
+	display: flex;
+	flex-direction: column;
+	gap: 4px;
+}
+
+.title{
+	margin: 0;
+	font-size: 1.5em
+}
+
+.title-bar{
+	display: flex;
+	align-items: center;
+	margin: 2px;
+	gap: 10px;
+}
+
+.title-bar-icon{
+	width:42px;
+	height:42px;
+}
