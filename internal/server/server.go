@@ -10,7 +10,7 @@ func StartServer(port string) {
 	mux := http.NewServeMux()
 
 	mux.HandleFunc("/", notfound)
-	mux.HandleFunc("/sessions", woa.Sessions)
+	mux.HandleFunc("/sessions", woa.SessionHandler)
 	mux.HandleFunc("/rules", woa.Rules)
 	mux.HandleFunc("/cast", woa.Cast)
 
