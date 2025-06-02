@@ -142,23 +142,6 @@ body {
 	margin-bottom: 10px;
 }
 
-@media (max-width: 768px) {
-	.wiki-layout {
-		flex-direction: column;
-	}
-
-	.character-properties {
-		order: 1;
-		width: 100%;
-		max-width: none;
-		margin-bottom: 20px;
-	}
-
-	.wiki-container {
-		order: 2;
-	}
-}
-
 .back-button {
 	background-color: #363637;
 	color: #d3d3d3;
@@ -176,4 +159,21 @@ body {
 
 .spacer {
 	flex: 1;
+}
+
+@media (max-width: 768px) {
+	.wiki-layout {
+		flex-direction: column;
+	}
+
+	.character-properties {
+		order: 1;
+		width: 100%;
+		max-width: none;
+		margin-bottom: 20px;
+	}
+
+	.wiki-container {
+		order: 2;
+	}
 }
