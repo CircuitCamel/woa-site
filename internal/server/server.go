@@ -3,10 +3,12 @@ package server
 import (
 	"fmt"
 	"net/http"
+	"warofages/internal/util"
 	"warofages/internal/woa"
 )
 
-func StartServer(port string) {
+func StartServer(conf util.Config) {
+
 	mux := http.NewServeMux()
 
 	mux.HandleFunc("/", notfound)
@@ -16,8 +18,12 @@ func StartServer(port string) {
 
 	mux.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("./website"))))
 
-	fmt.Printf("Server running on port: %s", port)
-	http.ListenAndServeTLS(":"+port, "/etc/nginx/ssl/el7ossen.uk_cert.pem", "/etc/nginx/ssl/el7ossen.uk_key.pem", mux)
+	fmt.Printf("Server running on port: %s", conf.PORT)
+	if conf.ENV == "production" {
+		http.ListenAndServeTLS(":"+conf.PORT, "/etc/nginx/ssl/el7ossen.uk_cert.pem", "/etc/nginx/ssl/el7ossen.uk_key.pem", mux)
+	} else {
+		http.ListenAndServe(":"+conf.PORT, mux)
+	}
 }
 
 func notfound(w http.ResponseWriter, r *http.Request) {

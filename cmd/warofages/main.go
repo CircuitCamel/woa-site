@@ -2,8 +2,10 @@ package main
 
 import (
 	"warofages/internal/server"
+	"warofages/internal/util"
 )
 
 func main() {
-	server.StartServer("5098")
+	conf := util.LoadConfig()
+	server.StartServer(conf)
 }
