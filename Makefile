@@ -4,7 +4,7 @@ run:
 	go run cmd/warofages/main.go
 
 build:
-	go build -o ./warofages cmd/warofages/main.go
+	go build -o ./bin/warofages cmd/warofages/main.go
 
 clean:
-	rm ./warofages
+	rm ./bin/warofages
