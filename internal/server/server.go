@@ -17,7 +17,7 @@ func StartServer(port string) {
 	mux.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("./website"))))
 
 	fmt.Printf("Server running on port: %s", port)
-	http.ListenAndServe(":"+port, mux)
+	http.ListenAndServeTLS(":"+port, "/etc/nginx/ssl/el7ossen.uk_cert.pem", "/etc/nginx/ssl/el7ossen.uk_key.pem", mux)
 }
 
 func notfound(w http.ResponseWriter, r *http.Request) {
