@@ -1,5 +1,4 @@
-Name: Thorne IronSmite
-Player: Adel Adwan
+Name: Thorne Ironsmite
 Race: Human
 Class: Monk/Paladin
 Age: 29

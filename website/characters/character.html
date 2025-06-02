@@ -10,26 +10,29 @@
 </head>
 
 <body>
-    <div class="title-bar">
-        <a href="/">
-            <img src="/static/images/page_icons/d20_page.png" class="title-bar-icon">
-        </a>
-        <h1 class="title">{{.Name}}</h1>
-    </div>
+	<div class="title-bar">
+		<a href="/">
+			<img src="/static/images/page_icons/d20_page.png" class="title-bar-icon">
+		</a>
+		<h1 class="title">{{.Name}}</h1>
+        <div class="spacer"></div>
+	    <a href="javascript:history.back()" class="back-button">← Back</a>
+	</div>
 
-    <div class="wiki-container">
-        <div class="character-summary">
-            <p><strong>Race:</strong> {{.Race}}</p>
-            <p><strong>Class:</strong> {{.Class}}</p>
-            <p><strong>Level:</strong> {{.Level}}</p>
-            {{if .Age}}<p><strong>Age:</strong> {{.Age}}</p>{{end}}
-        </div>
-
-        <hr>
-
-        {{.Body}}
-    </div>
+	<div class="wiki-layout">
+		<div class="wiki-container">
+			{{.Body}}
+		</div>
+		<div class="character-properties">
+			<h2>Properties</h2>
+			<ul>
+                <li><strong>Level:</strong> {{.Level}}</li>
+				<li><strong>Race:</strong> {{.Race}}</li>
+				<li><strong>Class:</strong> {{.Class}}</li>
+				<li><strong>Age:</strong> {{.Age}}</li>
+			</ul>
+		</div>
+	</div>
 </body>
-
 
 </html>

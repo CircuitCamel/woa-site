@@ -30,7 +30,7 @@ body {
 	font-size: 1.5em
 }
 
-.title-bar{
+.title-bar {
 	display: flex;
 	align-items: center;
 	margin: 2px;
@@ -65,14 +65,18 @@ body {
 	line-height: 1.6;
 }
 
-.wiki-container {
-	max-width: 800px;
-	margin: 30px auto;
+.wiki-layout {
+	display: flex;
+	gap: 40px;
 	padding: 20px;
-	background-color: #001a33;
-	border-radius: 10px;
-	box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);
-	line-height: 1.7;
+	align-items: flex-start;
+	flex-wrap: wrap;
+}
+
+.wiki-container {
+	flex: 3;
+	min-width: 0;
+	order: 1;
 }
 
 .wiki-container h1,
@@ -108,4 +112,68 @@ body {
 .character-summary p {
     margin: 5px 0;
     font-size: 16px;
+}
+
+.character-properties {
+	flex: 1;
+	background-color: #111b2b;
+	padding: 20px;
+	border-radius: 10px;
+	font-size: 16px;
+	max-width: 250px;
+	width: 100%;
+	box-sizing: border-box;
+	overflow-wrap: break-word;
+}
+
+.character-properties h2 {
+	margin-top: 0;
+	font-size: 1.2em;
+	border-bottom: 1px solid #d3d3d3;
+	padding-bottom: 5px;
+}
+
+.character-properties ul {
+	list-style-type: none;
+	padding-left: 0;
+}
+
+.character-properties li {
+	margin-bottom: 10px;
+}
+
+@media (max-width: 768px) {
+	.wiki-layout {
+		flex-direction: column;
+	}
+
+	.character-properties {
+		order: 1;
+		width: 100%;
+		max-width: none;
+		margin-bottom: 20px;
+	}
+
+	.wiki-container {
+		order: 2;
+	}
+}
+
+.back-button {
+	background-color: #363637;
+	color: #d3d3d3;
+	padding: 8px 14px;
+	border-radius: 8px;
+	text-decoration: none;
+	font-size: 0.95em;
+	white-space: nowrap;
+}
+
+.back-button:hover {
+	background-color: #d3d3d3;
+	color: #363637;
+}
+
+.spacer {
+	flex: 1;
 }
