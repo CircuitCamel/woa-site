@@ -1,3 +1,4 @@
+---
 Name: Aster
 Race: Human
 Class: Cleric/Fighter

@@ -66,14 +66,23 @@ func loadCharacterMarkdown(path string) (Character, error) {
 	var c Character
 	var mdLines []string
 	scanner := bufio.NewScanner(file)
-	inMeta := true
+	inMeta := false
+	metaStarted := false
 
 	for scanner.Scan() {
 		line := scanner.Text()
 
-		if inMeta && strings.TrimSpace(line) == "---" {
-			inMeta = false
-			continue
+		if strings.TrimSpace(line) == "---" {
+			if !metaStarted {
+				// First --- encountered, start reading metadata
+				inMeta = true
+				metaStarted = true
+				continue
+			} else if inMeta {
+				// Second --- encountered, stop reading metadata
+				inMeta = false
+				continue
+			}
 		}
 
 		if inMeta {
@@ -93,7 +102,8 @@ func loadCharacterMarkdown(path string) (Character, error) {
 					c.Level = val
 				}
 			}
-		} else {
+		} else if metaStarted {
+			// Only collect markdown lines after metadata section has ended
 			mdLines = append(mdLines, line)
 		}
 	}
