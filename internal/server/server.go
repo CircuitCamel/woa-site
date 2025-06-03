@@ -4,7 +4,10 @@ import (
 	"fmt"
 	"net/http"
 	"warofages/internal/util"
-	"warofages/internal/woa"
+	"warofages/internal/woa/character"
+	landing "warofages/internal/woa/mainpage"
+	"warofages/internal/woa/rule"
+	"warofages/internal/woa/session"
 )
 
 func StartServer(conf util.Config) {
@@ -12,15 +15,15 @@ func StartServer(conf util.Config) {
 	mux := http.NewServeMux()
 
 	mux.HandleFunc("/", notfound)
-	mux.HandleFunc("/sessions", woa.SessionHandler)
-	mux.HandleFunc("/rules", woa.Rules)
-	mux.HandleFunc("/characters", woa.CharacterHandler)
+	mux.HandleFunc("/sessions", session.SessionHandler)
+	mux.HandleFunc("/rules", rule.RulesHandler)
+	mux.HandleFunc("/characters", character.CharacterHandler)
 
-	mux.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("./website"))))
+	mux.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("./static"))))
 
 	fmt.Printf("Server running on port: %s", conf.PORT)
 	if conf.ENV == "production" {
-		http.ListenAndServeTLS(":"+conf.PORT, "/etc/nginx/ssl/el7ossen.uk_cert.pem", "/etc/nginx/ssl/el7ossen.uk_key.pem", mux)
+		http.ListenAndServeTLS(":"+conf.PORT, conf.CRT, conf.KEY, mux)
 	} else {
 		http.ListenAndServe(":"+conf.PORT, mux)
 	}
@@ -32,5 +35,5 @@ func notfound(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	woa.MainPage(w, r)
+	landing.Index(w, r)
 }
