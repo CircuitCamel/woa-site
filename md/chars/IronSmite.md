@@ -1,8 +1,9 @@
+---
 Name: Thorne Ironsmite
 Race: Human
 Class: Monk/Paladin
-Age: 29
 Level: 4
+Age: 29
 ---
 
 ## Early Life 
@@ -24,9 +25,9 @@ In service, Thorne formed a bond with Garrick Stonefell, a fellow soldier known 
 
 Their defining moment came during the battle at the last stronghold of Dragonborn on the Moonshae Isles, where they aimed to subdue dragonkin turned against humanity. Thorne executed his duties with meticulous strategy and discipline, though not without personal cost. 
 
-In a pivotal moment, Garrick sacrificed himself to save Thorne and several comrades from certain death. As he fell, he urged Thorne to continue their mission of seeking understanding beyond mere orders, hinting at the complexities of justice. 
+In a pivotal moment, Garrick sacrificed himself to save Thorne and several comrades from certain death. As he fell, he urged Thorne to continue their mission of seeking understanding beyond mere orders, hinting at the complexities of justice.
 
 
 ## Aftermath 
 
-Shaken by Garrick's loss but resolute in his principles, Thorne left military service to explore deeper truths about duty and order. He traveled widely, studying ancient texts and philosophies that explored the balance between law and morality. 
+Shaken by Garrick's loss but resolute in his principles, Thorne left military service to explore deeper truths about duty and order. He traveled widely, studying ancient texts and philosophies that explored the balance between law and morality.
