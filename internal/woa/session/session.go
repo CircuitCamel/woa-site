@@ -1,4 +1,4 @@
-package woa
+package session
 
 import (
 	"net/http"
@@ -7,6 +7,7 @@ import (
 	"strconv"
 	"text/template"
 	"warofages/internal/util"
+	"warofages/internal/woa"
 )
 
 func SessionHandler(w http.ResponseWriter, r *http.Request) {
@@ -25,7 +26,7 @@ func sessions(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		return
 	}
-	tmpl, err := template.ParseFiles("website/sessions/index.html")
+	tmpl, err := template.ParseFiles("static/sessions/index.html")
 	if err != nil {
 		return
 	}
@@ -37,7 +38,7 @@ func sessionDetailHandler(w http.ResponseWriter, r *http.Request) {
 
 	sessionID, _ := strconv.Atoi(id)
 
-	tmpl, err := template.ParseFiles("./website/sessions/session.html")
+	tmpl, err := template.ParseFiles("./static/sessions/session.html")
 	if err != nil {
 		http.Error(w, "Template error", http.StatusInternalServerError)
 		return
@@ -45,7 +46,7 @@ func sessionDetailHandler(w http.ResponseWriter, r *http.Request) {
 
 	sessions, _ := getSessions()
 
-	var selected Session
+	var selected woa.Session
 	for _, a := range sessions {
 		if a.ID == sessionID {
 			selected = a
@@ -59,14 +60,14 @@ func sessionDetailHandler(w http.ResponseWriter, r *http.Request) {
 	tmpl.Execute(w, selected)
 }
 
-func getSessions() ([]Session, error) {
+func getSessions() ([]woa.Session, error) {
 	files, err := filepath.Glob("./md/sessions/*.md")
 	if err != nil {
 		return nil, err
 	}
-	result := make([]Session, len(files))
+	result := make([]woa.Session, len(files))
 	for i, v := range files {
-		result[i] = Session{ID: i, Path: v}
+		result[i] = woa.Session{ID: i, Path: v}
 	}
 	return result, nil
 }

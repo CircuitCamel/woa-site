@@ -1,4 +1,4 @@
-package woa
+package character
 
 import (
 	"bufio"
@@ -8,6 +8,7 @@ import (
 	"strings"
 	"text/template"
 	"warofages/internal/util"
+	"warofages/internal/woa"
 )
 
 func CharacterHandler(w http.ResponseWriter, r *http.Request) {
@@ -26,7 +27,7 @@ func characters(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		return
 	}
-	tmpl, err := template.ParseFiles("website/characters/index.html")
+	tmpl, err := template.ParseFiles("static/characters/index.html")
 	if err != nil {
 		return
 	}
@@ -38,7 +39,7 @@ func characterDetailHandler(w http.ResponseWriter, r *http.Request) {
 
 	characterName := name
 
-	tmpl, err := template.ParseFiles("./website/characters/character.html")
+	tmpl, err := template.ParseFiles("static/characters/character.html")
 	if err != nil {
 		http.Error(w, "Template error", http.StatusInternalServerError)
 		return
@@ -46,7 +47,7 @@ func characterDetailHandler(w http.ResponseWriter, r *http.Request) {
 
 	characters, _ := getCharacters()
 
-	var selected Character
+	var selected woa.Character
 	for _, a := range characters {
 		if a.Name == characterName {
 			selected = a
@@ -56,14 +57,14 @@ func characterDetailHandler(w http.ResponseWriter, r *http.Request) {
 	tmpl.Execute(w, selected)
 }
 
-func loadCharacterMarkdown(path string) (Character, error) {
+func loadCharacterMarkdown(path string) (woa.Character, error) {
 	file, err := os.Open(path)
 	if err != nil {
-		return Character{}, err
+		return woa.Character{}, err
 	}
 	defer file.Close()
 
-	var c Character
+	var c woa.Character
 	var mdLines []string
 	scanner := bufio.NewScanner(file)
 	inMeta := false
@@ -113,12 +114,12 @@ func loadCharacterMarkdown(path string) (Character, error) {
 	return c, nil
 }
 
-func getCharacters() ([]Character, error) {
+func getCharacters() ([]woa.Character, error) {
 	files, err := filepath.Glob("./md/chars/*.md")
 	if err != nil {
 		return nil, err
 	}
-	result := make([]Character, len(files))
+	result := make([]woa.Character, len(files))
 
 	for i, file := range files {
 		result[i], _ = loadCharacterMarkdown(file)
