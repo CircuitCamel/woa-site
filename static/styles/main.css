@@ -177,3 +177,11 @@ body {
 		order: 2;
 	}
 }
+
+a {
+    color: #4aa3df;
+    text-decoration: underline;
+}
+a:hover {
+    color: #7cc3ff;
+}
