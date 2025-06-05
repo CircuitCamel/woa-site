@@ -1,0 +1,1 @@
+Snacks and drinks are allowed

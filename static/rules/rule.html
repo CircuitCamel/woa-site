@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<title>Rule {{.ID}}</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="stylesheet" href="/static/styles/main.css">
+	<link rel="icon" type="image/x-icon" href="/static/images/tab_icons/d20_tab.ico">
+</head>
+
+<body>
+    <div class="title-bar">
+		<a href="/">
+			<img src="/static/images/page_icons/d20_page.png" class="title-bar-icon">
+		</a>
+		<h1 class="title">Rule {{.ID}}</h1>
+		<div class="spacer"></div>
+	    <a href="javascript:history.back()" class="back-button">← Back</a>
+	</div>
+        {{.Body}}
+</body>
+
+</html>
