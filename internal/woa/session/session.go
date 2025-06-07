@@ -67,7 +67,7 @@ func getSessions() ([]woa.Session, error) {
 	}
 	result := make([]woa.Session, len(files))
 	for i, v := range files {
-		result[i] = woa.Session{ID: i, Path: v}
+		result[i] = woa.Session{ID: i + 1, Path: v}
 	}
 	return result, nil
 }

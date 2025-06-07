@@ -1,22 +1,23 @@
 button {
-	color: #d3d3d3;
-	background-color: #363637;
-	font-size: 19px;
-	padding: 15px 50px;
-	cursor: pointer;
-	border: none;
-	width: 100%
+    background-color: #4f6d7a;
+    color: #d3d3d3;
+    font-size: 19px;
+    padding: 12px 24px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.3s ease, color 0.2s ease;
 }
 
 button:hover {
-	color: #363637;
-	background-color: #d3d3d3;
+    background-color: #d3d3d3;
+    color: #0b0d17;
 }
 
 body {
-	background-color: #000d1a;
+	background-color: #0b0d17;
 	color: #d3d3d3;
-	font-family: Arial
+	font-family: Arial, sans-serif
 }
 
 .buttondiv {
@@ -142,25 +143,6 @@ body {
 	margin-bottom: 10px;
 }
 
-.back-button {
-	background-color: #363637;
-	color: #d3d3d3;
-	padding: 8px 14px;
-	border-radius: 8px;
-	text-decoration: none;
-	font-size: 0.95em;
-	white-space: nowrap;
-}
-
-.back-button:hover {
-	background-color: #d3d3d3;
-	color: #363637;
-}
-
-.spacer {
-	flex: 1;
-}
-
 @media (max-width: 768px) {
 	.wiki-layout {
 		flex-direction: column;
@@ -179,9 +161,23 @@ body {
 }
 
 a {
-    color: #4aa3df;
+    color: #9f8fff;
     text-decoration: underline;
 }
-a:hover {
-    color: #7cc3ff;
+
+.back-button{
+	display:inline-block;
+	width:42px;
+	height:42px;
+	background-image: url('/static/images/ui/back.png');
+	background-size: contain;
+    background-position: center;
+    background-repeat: no-repeat;
+    text-decoration: none;
+	cursor: pointer;
+    transition: background 0.3s ease, color 0.2s ease;
+}
+
+.back-button:hover{
+	background-image: url('/static/images/ui/back-hover.png');
 }
