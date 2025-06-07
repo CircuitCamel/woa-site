@@ -14,92 +14,105 @@ button:hover {
     color: #0b0d17;
 }
 
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
 body {
-	background-color: #0b0d17;
-	color: #d3d3d3;
-	font-family: Arial, sans-serif;
+    background-color: #0b0d17;
+    color: #d3d3d3;
+    font-family: Arial, sans-serif;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.main-content {
+    flex: 1;
 }
 
 .buttondiv {
-	display: flex;
-	flex-direction: column;
-	gap: 4px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
 }
 
 .title{
-	margin: 0;
-	font-size: 1.5em
+    margin: 0;
+    font-size: 1.5em
 }
 
 .title-bar {
-	display: flex;
-	align-items: center;
-	margin: 2px;
-	gap: 10px;
+    display: flex;
+    align-items: center;
+    margin: 2px;
+    gap: 10px;
 }
 
 .title-bar-icon{
-	width:42px;
-	height:42px;
+    width:42px;
+    height:42px;
 }
 
 .character-container {
-	max-width: 800px;
-	margin: 20px auto;
-	padding: 20px;
-	background-color: #001a33;
-	border-radius: 10px;
-	box-shadow: 0 0 10px rgba(0,0,0,0.5);
+    max-width: 800px;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: #001a33;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.5);
 }
 
 .character-info p {
-	margin: 5px 0;
-	font-size: 18px;
+    margin: 5px 0;
+    font-size: 18px;
 }
 
 .character-info strong {
-	color: #ffffff;
+    color: #ffffff;
 }
 
 .character-body {
-	margin-top: 20px;
-	line-height: 1.6;
+    margin-top: 20px;
+    line-height: 1.6;
 }
 
 .wiki-layout {
-	display: flex;
-	gap: 40px;
-	padding: 20px;
-	align-items: flex-start;
-	flex-wrap: wrap;
+    display: flex;
+    gap: 40px;
+    padding: 20px;
+    align-items: flex-start;
+    flex-wrap: wrap;
 }
 
 .wiki-container {
-	flex: 3;
-	min-width: 0;
-	order: 1;
+    flex: 3;
+    min-width: 0;
+    order: 1;
 }
 
 .wiki-container h1,
 .wiki-container h2,
 .wiki-container h3 {
-	color: #d3d3d3;
-	margin-top: 20px;
-	margin-bottom: 10px;
+    color: #d3d3d3;
+    margin-top: 20px;
+    margin-bottom: 10px;
 }
 
 .wiki-container p {
-	margin-bottom: 10px;
-	font-size: 17px;
+    margin-bottom: 10px;
+    font-size: 17px;
 }
 
 .wiki-container ul {
-	margin-left: 20px;
-	margin-bottom: 10px;
+    margin-left: 20px;
+    margin-bottom: 10px;
 }
 
 .wiki-container li {
-	margin-bottom: 5px;
+    margin-bottom: 5px;
 }
 
 .character-summary {
@@ -116,48 +129,48 @@ body {
 }
 
 .character-properties {
-	flex: 1;
-	background-color: #111b2b;
-	padding: 20px;
-	border-radius: 10px;
-	font-size: 16px;
-	max-width: 250px;
-	width: 100%;
-	box-sizing: border-box;
-	overflow-wrap: break-word;
+    flex: 1;
+    background-color: #111b2b;
+    padding: 20px;
+    border-radius: 10px;
+    font-size: 16px;
+    max-width: 250px;
+    width: 100%;
+    box-sizing: border-box;
+    overflow-wrap: break-word;
 }
 
 .character-properties h2 {
-	margin-top: 0;
-	font-size: 1.2em;
-	border-bottom: 1px solid #d3d3d3;
-	padding-bottom: 5px;
+    margin-top: 0;
+    font-size: 1.2em;
+    border-bottom: 1px solid #d3d3d3;
+    padding-bottom: 5px;
 }
 
 .character-properties ul {
-	list-style-type: none;
-	padding-left: 0;
+    list-style-type: none;
+    padding-left: 0;
 }
 
 .character-properties li {
-	margin-bottom: 10px;
+    margin-bottom: 10px;
 }
 
 @media (max-width: 768px) {
-	.wiki-layout {
-		flex-direction: column;
-	}
+    .wiki-layout {
+        flex-direction: column;
+    }
 
-	.character-properties {
-		order: 1;
-		width: 100%;
-		max-width: none;
-		margin-bottom: 20px;
-	}
+    .character-properties {
+        order: 1;
+        width: 100%;
+        max-width: none;
+        margin-bottom: 20px;
+    }
 
-	.wiki-container {
-		order: 2;
-	}
+    .wiki-container {
+        order: 2;
+    }
 }
 
 a {
@@ -166,32 +179,30 @@ a {
 }
 
 .back-button{
-	display:inline-block;
-	width:42px;
-	height:42px;
-	background-image: url('/static/images/ui/back.png');
-	background-size: contain;
+    display:inline-block;
+    width:42px;
+    height:42px;
+    background-image: url('/static/images/ui/back.png');
+    background-size: contain;
     background-position: center;
     background-repeat: no-repeat;
     text-decoration: none;
-	cursor: pointer;
+    cursor: pointer;
     transition: background 0.3s ease, color 0.2s ease;
 }
 
 .back-button:hover{
-	background-image: url('/static/images/ui/back-hover.png');
+    background-image: url('/static/images/ui/back-hover.png');
 }
 
 .myfoot{
-	position: fixed;
-	bottom: 10px;
-	right: 1px;
-	left: 1px;
+    margin-top: auto;
+    padding: 20px 1px 10px 1px;
 }
 
 footer{
-	text-align: center;
-	padding: 1rem 0;
-	font-size: 0.9rem;
-	color: #666;
+    text-align: center;
+    padding: 1rem 0;
+    font-size: 0.9rem;
+    color: #666;
 }
