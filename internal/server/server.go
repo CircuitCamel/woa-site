@@ -5,7 +5,7 @@ import (
 	"net/http"
 	"warofages/internal/util"
 	"warofages/internal/woa/character"
-	landing "warofages/internal/woa/mainpage"
+	"warofages/internal/woa/landing"
 	"warofages/internal/woa/rule"
 	"warofages/internal/woa/session"
 )
