@@ -28,7 +28,7 @@ func CharacterDetailHandler(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	name := vars["name"]
 
-	characterName := name
+	characterName := strings.ReplaceAll(name, "_", " ")
 
 	tmpl, err := template.ParseFiles("static/characters/character.html")
 	if err != nil {
@@ -99,6 +99,7 @@ func loadCharacterMarkdown(path string) (woa.Character, error) {
 
 	md := strings.Join(mdLines, "\n")
 	c.Body = util.MdToHTML([]byte(md))
+	c.NamePath = strings.ReplaceAll(c.Name, " ", "_")
 	return c, nil
 }
 

@@ -13,10 +13,11 @@ type Rule struct {
 }
 
 type Character struct {
-	Name  string
-	Race  string
-	Class string
-	Age   string
-	Level string
-	Body  string
+	Name     string
+	NamePath string
+	Race     string
+	Class    string
+	Age      string
+	Level    string
+	Body     string
 }
