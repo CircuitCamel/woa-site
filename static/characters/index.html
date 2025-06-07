@@ -16,7 +16,7 @@
 	</div>
     <div class="buttondiv">
             {{range .}}
-            <button onclick="location='/characters?name={{.Name}}'">{{.Name}}</button>
+            <button onclick="location='/characters/{{.Name}}'">{{.Name}}</button>
             {{end}}
     </div>
 </body>

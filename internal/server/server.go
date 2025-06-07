@@ -8,18 +8,23 @@ import (
 	"warofages/internal/woa/landing"
 	"warofages/internal/woa/rule"
 	"warofages/internal/woa/session"
+
+	"github.com/gorilla/mux"
 )
 
 func StartServer(conf util.Config) {
 
-	mux := http.NewServeMux()
+	mux := mux.NewRouter()
 
 	mux.HandleFunc("/", notfound)
 	mux.HandleFunc("/sessions", session.SessionHandler)
 	mux.HandleFunc("/rules", rule.RulesHandler)
-	mux.HandleFunc("/characters", character.CharacterHandler)
+	mux.HandleFunc("/characters", character.CharactersHandler)
+	mux.HandleFunc("/characters/{name}", character.CharacterDetailHandler)
 
-	mux.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("./static"))))
+	mux.PathPrefix("/static/").Handler(
+		http.StripPrefix("/static/", http.FileServer(http.Dir("./static"))),
+	)
 
 	fmt.Printf("Server running on port: %s", conf.PORT)
 	if conf.ENV == "production" {

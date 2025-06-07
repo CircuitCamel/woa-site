@@ -17,7 +17,7 @@ button:hover {
 body {
 	background-color: #0b0d17;
 	color: #d3d3d3;
-	font-family: Arial, sans-serif
+	font-family: Arial, sans-serif;
 }
 
 .buttondiv {
@@ -180,4 +180,18 @@ a {
 
 .back-button:hover{
 	background-image: url('/static/images/ui/back-hover.png');
+}
+
+.myfoot{
+	position: fixed;
+	bottom: 10px;
+	right: 1px;
+	left: 1px;
+}
+
+footer{
+	text-align: center;
+	padding: 1rem 0;
+	font-size: 0.9rem;
+	color: #666;
 }
