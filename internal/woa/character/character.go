@@ -9,20 +9,10 @@ import (
 	"text/template"
 	"warofages/internal/util"
 	"warofages/internal/woa"
+	"github.com/gorilla/mux"
 )
 
-func CharacterHandler(w http.ResponseWriter, r *http.Request) {
-	name := r.URL.Query().Get("name")
-	if name == "" {
-		// No ID provided — serve sessions list
-		characters(w, r)
-		return
-	} else {
-		characterDetailHandler(w, r)
-	}
-}
-
-func characters(w http.ResponseWriter, r *http.Request) {
+func CharactersHandler(w http.ResponseWriter, r *http.Request) {
 	characters, err := getCharacters()
 	if err != nil {
 		return
@@ -34,8 +24,9 @@ func characters(w http.ResponseWriter, r *http.Request) {
 	tmpl.Execute(w, characters)
 }
 
-func characterDetailHandler(w http.ResponseWriter, r *http.Request) {
-	name := r.URL.Query().Get("name")
+func CharacterDetailHandler(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	name := vars["name"]
 
 	characterName := name
 
@@ -75,12 +66,10 @@ func loadCharacterMarkdown(path string) (woa.Character, error) {
 
 		if strings.TrimSpace(line) == "---" {
 			if !metaStarted {
-				// First --- encountered, start reading metadata
 				inMeta = true
 				metaStarted = true
 				continue
 			} else if inMeta {
-				// Second --- encountered, stop reading metadata
 				inMeta = false
 				continue
 			}
@@ -104,7 +93,6 @@ func loadCharacterMarkdown(path string) (woa.Character, error) {
 				}
 			}
 		} else if metaStarted {
-			// Only collect markdown lines after metadata section has ended
 			mdLines = append(mdLines, line)
 		}
 	}
