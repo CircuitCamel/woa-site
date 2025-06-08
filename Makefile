@@ -8,3 +8,6 @@ build:
 
 clean:
 	rm ./bin/warofages
+
+full:
+	
