@@ -2,6 +2,7 @@ package server
 
 import (
 	"fmt"
+	"log"
 	"net/http"
 	"warofages/internal/util"
 	"warofages/internal/woa/character"
@@ -30,9 +31,9 @@ func StartServer(conf util.Config) {
 	if conf.ENV == "production" {
 		http.ListenAndServeTLS(":"+conf.PORT, conf.CRT, conf.KEY, mux)
 	} else if conf.ENV == "staging" {
-		http.ListenAndServeTLS(":"+conf.PORT, conf.CRT, conf.KEY, mux)
+		log.Fatal(http.ListenAndServeTLS(":"+conf.PORT, conf.CRT, conf.KEY, mux))
 	} else {
-		http.ListenAndServe(":"+conf.PORT, mux)
+		log.Fatal(http.ListenAndServe(":"+conf.PORT, mux))
 	}
 }
 
