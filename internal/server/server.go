@@ -29,6 +29,8 @@ func StartServer(conf util.Config) {
 	fmt.Printf("Server running on port: %s", conf.PORT)
 	if conf.ENV == "production" {
 		http.ListenAndServeTLS(":"+conf.PORT, conf.CRT, conf.KEY, mux)
+	} else if conf.ENV == "staging" {
+		http.ListenAndServeTLS(":"+conf.PORT, conf.CRT, conf.KEY, mux)
 	} else {
 		http.ListenAndServe(":"+conf.PORT, mux)
 	}
