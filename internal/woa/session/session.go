@@ -14,23 +14,28 @@ func SessionHandler(w http.ResponseWriter, r *http.Request) {
 	id := r.URL.Query().Get("id")
 	if id == "" {
 		// No ID provided — serve sessions list
-		sessions(w, r)
+		sessions(w)
 		return
 	} else {
 		sessionDetailHandler(w, r)
 	}
 }
 
-func sessions(w http.ResponseWriter, r *http.Request) {
+func sessions(w http.ResponseWriter) {
 	sessions, err := getSessions()
 	if err != nil {
 		return
 	}
-	tmpl, err := template.ParseFiles("static/sessions/index.html")
+	tmpl, err := template.ParseFiles(
+		"static/templates/head.html",
+		"static/templates/titlebar.html",
+		"static/sessions/index.html",
+		"static/templates/footer.html",
+	)
 	if err != nil {
 		return
 	}
-	tmpl.Execute(w, sessions)
+	tmpl.ExecuteTemplate(w, "base", sessions)
 }
 
 func sessionDetailHandler(w http.ResponseWriter, r *http.Request) {
@@ -38,7 +43,12 @@ func sessionDetailHandler(w http.ResponseWriter, r *http.Request) {
 
 	sessionID, _ := strconv.Atoi(id)
 
-	tmpl, err := template.ParseFiles("./static/sessions/session.html")
+	tmpl, err := template.ParseFiles(
+		"static/templates/head.html",
+		"static/templates/titlebar.html",
+		"static/sessions/session.html",
+		"static/templates/footer.html",
+	)
 	if err != nil {
 		http.Error(w, "Template error", http.StatusInternalServerError)
 		return
@@ -57,7 +67,7 @@ func sessionDetailHandler(w http.ResponseWriter, r *http.Request) {
 
 	selected.Body = util.MdToHTML(databytes)
 
-	tmpl.Execute(w, selected)
+	tmpl.ExecuteTemplate(w, "base", selected)
 }
 
 func getSessions() ([]woa.Session, error) {
