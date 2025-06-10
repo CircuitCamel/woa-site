@@ -1,13 +1,22 @@
 .PHONY: run build clean
 
 run:
-	git submodule update --init && go run cmd/warofages/main.go
+	go run cmd/warofages/main.go
 
 build:
-	git submodule update --init && go build -o ./bin/warofages cmd/warofages/main.go
+	go build -o ./bin/warofages cmd/warofages/main.go
 
 clean:
 	rm ./bin/warofages && rm -d ./bin/
 
-full: build
+updateAll:
+	git pull && git submodule update --init
+
+updateRepo:
+	git pull
+
+updateSubmodule:
+	git submodule update --init
+
+full: updateAll build
 	./bin/warofages
