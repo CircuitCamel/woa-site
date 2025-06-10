@@ -20,4 +20,6 @@ The site includes character pages, session logs, and custom rules.
 make run
 ```
 ---
+Also, the site can be viewed on dnd.circuitcamel.com for the main branch, and dev-dnd.circuitcamel.com for the develop branch.
+---
 📜 The project is licensed under MIT.
