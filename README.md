@@ -5,11 +5,13 @@ This repository contains the source code and content for the website I built to 
 
 The site includes character pages, session logs, and custom rules.
 
+Also, the site can be viewed on [dnd.circuitcamel.com](https://dnd.circuitcamel.com) for the main branch, and [dev-dnd.circuitcamel.com](https://dev-dnd.circuitcamel.com) for the develop branch.
+
 ## Features
 
 - Character bios
 - Session stories
-- Custom rules
+- Homebrew rules
 - Markdown-based content
 - Go web server
 - Simple CSS styling
@@ -19,7 +21,7 @@ The site includes character pages, session logs, and custom rules.
 ```bash
 make run
 ```
----
-Also, the site can be viewed on dnd.circuitcamel.com for the main branch, and dev-dnd.circuitcamel.com for the develop branch.
+
+
 ---
 📜 The project is licensed under MIT.
