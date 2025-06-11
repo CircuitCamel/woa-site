@@ -21,5 +21,7 @@ jobs:
       with:
         go-version: '1.24.4'
 
-    - name: Build
-      run: make updateSubmodule build
+    - name: Update Submodule
+      run: git submodule update --init
+    - name: build
+      run: go build -o ./bin/warofages cmd/warofages/main.go
