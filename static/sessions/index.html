@@ -6,7 +6,7 @@
 <body>
     <div class="buttondiv">
             {{range .}}
-            <button onclick="location='/sessions?id={{.ID}}'">Session {{.ID}}</button>
+            <button onclick="location='/sessions/{{.ID}}'">Session {{.ID}}</button>
             {{end}}
     </div>
 </body>

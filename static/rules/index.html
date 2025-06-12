@@ -16,7 +16,7 @@
 	</div>
     <div class="buttondiv">
             {{range .}}
-            <button onclick="location='/rules?rule={{.ID}}'">Rule {{.ID}}</button>
+            <button onclick="location='/rules/{{.ID}}'">Rule {{.ID}}</button>
             {{end}}
     </div>
 </body>
