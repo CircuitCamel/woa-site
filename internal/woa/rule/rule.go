@@ -8,19 +8,11 @@ import (
 	"text/template"
 	"warofages/internal/util"
 	"warofages/internal/woa"
+
+	"github.com/gorilla/mux"
 )
 
 func RulesHandler(w http.ResponseWriter, r *http.Request) {
-	rule := r.URL.Query().Get("rule")
-	if rule == "" {
-		rulesMainPage(w, r)
-		return
-	} else {
-		loadRule(w, r)
-	}
-}
-
-func rulesMainPage(w http.ResponseWriter, r *http.Request) {
 	rules, err := getRules()
 	if err != nil {
 		return
@@ -32,8 +24,9 @@ func rulesMainPage(w http.ResponseWriter, r *http.Request) {
 	tmpl.Execute(w, rules)
 }
 
-func loadRule(w http.ResponseWriter, r *http.Request) {
-	rule := r.URL.Query().Get("rule")
+func RuleDetailHandler(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	rule := vars["rule"]
 
 	ruleID, _ := strconv.Atoi(rule)
 

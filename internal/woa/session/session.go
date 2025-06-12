@@ -8,20 +8,11 @@ import (
 	"text/template"
 	"warofages/internal/util"
 	"warofages/internal/woa"
+
+	"github.com/gorilla/mux"
 )
 
-func SessionHandler(w http.ResponseWriter, r *http.Request) {
-	id := r.URL.Query().Get("id")
-	if id == "" {
-		// No ID provided — serve sessions list
-		sessions(w)
-		return
-	} else {
-		sessionDetailHandler(w, r)
-	}
-}
-
-func sessions(w http.ResponseWriter) {
+func SessionsHandler(w http.ResponseWriter, r *http.Request) {
 	sessions, err := getSessions()
 	if err != nil {
 		return
@@ -38,8 +29,9 @@ func sessions(w http.ResponseWriter) {
 	tmpl.ExecuteTemplate(w, "base", sessions)
 }
 
-func sessionDetailHandler(w http.ResponseWriter, r *http.Request) {
-	id := r.URL.Query().Get("id")
+func SessionDetailHandler(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	id := vars["session"]
 
 	sessionID, _ := strconv.Atoi(id)
 
