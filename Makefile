@@ -16,7 +16,7 @@ updateRepo:
 	git pull
 
 updateSubmodule:
-	git submodule update --init
+	git submodule update --recursive --remote --init
 
 full: updateAll build
 	./bin/warofages
