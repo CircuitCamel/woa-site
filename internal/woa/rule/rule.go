@@ -15,10 +15,12 @@ import (
 func RulesHandler(w http.ResponseWriter, r *http.Request) {
 	rules, err := getRules()
 	if err != nil {
+		util.ErrPage(w, r, 500)
 		return
 	}
 	tmpl, err := template.ParseFiles("static/rules/index.html")
 	if err != nil {
+		util.ErrPage(w, r, 500)
 		return
 	}
 	tmpl.Execute(w, rules)
@@ -32,17 +34,24 @@ func RuleDetailHandler(w http.ResponseWriter, r *http.Request) {
 
 	tmpl, err := template.ParseFiles("static/rules/rule.html")
 	if err != nil {
-		http.Error(w, "Template error", http.StatusInternalServerError)
+		util.ErrPage(w, r, 500)
 		return
 	}
 
 	rules, _ := getRules()
 
 	var selected woa.Rule
+	found := false
 	for _, a := range rules {
 		if a.ID == ruleID {
 			selected = a
+			found = true
 		}
+	}
+
+	if !found {
+		util.ErrPage(w, r, 404)
+		return
 	}
 
 	databytes, _ := os.ReadFile(selected.Path)
