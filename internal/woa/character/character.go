@@ -16,10 +16,12 @@ import (
 func CharactersHandler(w http.ResponseWriter, r *http.Request) {
 	characters, err := getCharacters()
 	if err != nil {
+		util.ErrPage(w, r, 500)
 		return
 	}
 	tmpl, err := template.ParseFiles("static/characters/index.html")
 	if err != nil {
+		util.ErrPage(w, r, 500)
 		return
 	}
 	tmpl.Execute(w, characters)
@@ -33,17 +35,24 @@ func CharacterDetailHandler(w http.ResponseWriter, r *http.Request) {
 
 	tmpl, err := template.ParseFiles("static/characters/character.html")
 	if err != nil {
-		http.Error(w, "Template error", http.StatusInternalServerError)
+		util.ErrPage(w, r, 500)
 		return
 	}
 
 	characters, _ := getCharacters()
 
 	var selected woa.Character
+	found := false
 	for _, a := range characters {
 		if a.Name == characterName {
 			selected = a
+			found = true
 		}
+	}
+
+	if !found {
+		util.ErrPage(w, r, 404)
+		return
 	}
 
 	tmpl.Execute(w, selected)

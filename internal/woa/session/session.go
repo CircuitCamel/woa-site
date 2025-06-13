@@ -15,6 +15,7 @@ import (
 func SessionsHandler(w http.ResponseWriter, r *http.Request) {
 	sessions, err := getSessions()
 	if err != nil {
+		util.ErrPage(w, r, 500)
 		return
 	}
 	tmpl, err := template.ParseFiles(
@@ -24,6 +25,7 @@ func SessionsHandler(w http.ResponseWriter, r *http.Request) {
 		"static/templates/footer.html",
 	)
 	if err != nil {
+		util.ErrPage(w, r, 500)
 		return
 	}
 	tmpl.ExecuteTemplate(w, "base", sessions)
@@ -42,17 +44,25 @@ func SessionDetailHandler(w http.ResponseWriter, r *http.Request) {
 		"static/templates/footer.html",
 	)
 	if err != nil {
-		http.Error(w, "Template error", http.StatusInternalServerError)
+		util.ErrPage(w, r, 500)
 		return
 	}
 
 	sessions, _ := getSessions()
 
 	var selected woa.Session
+	found := false
+
 	for _, a := range sessions {
 		if a.ID == sessionID {
 			selected = a
+			found = true
 		}
+	}
+
+	if !found {
+		util.ErrPage(w, r, 404)
+		return
 	}
 
 	databytes, _ := os.ReadFile(selected.Path)
