@@ -1,20 +1,18 @@
-<!DOCTYPE html>
-<html lang="en">
+{{define "title"}}Session {{.ID}}{{end}}
 
-<head>
-	<meta charset="UTF-8">
-	<title>Session {{.ID}}</title>
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<link rel="stylesheet" href="/static/styles/main.css">
-	<link rel="icon" type="image/x-icon" href="/static/images/tab_icons/d20_tab.ico">
-</head>
+{{define "tbTitle"}}Session {{.ID}}{{end}}
 
-<body>
-    <div class="title-bar">
-		<a href="javascript:history.back()" class="back-button"></a>
-		<h1 class="title">Session {{.ID}}</h1>
-	</div>
-        {{.Body}}
-</body>
-
-</html>
+{{define "content"}}
+	<div class="wiki-layout">
+		<div class="wiki-container">
+			{{.Body}}
+		</div>
+		<div class="character-properties">
+			<h2>Time & Place</h2>
+			<ul>
+                <li><strong>Time:</strong> {{.Time}}</li>
+				<li><strong>Place:</strong> {{.Place}}</li>
+			</ul>
+		</div>
+	</div> 
+{{end}}

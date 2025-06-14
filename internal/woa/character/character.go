@@ -9,52 +9,63 @@ import (
 	"text/template"
 	"warofages/internal/util"
 	"warofages/internal/woa"
+
+	"github.com/gorilla/mux"
 )
 
-func CharacterHandler(w http.ResponseWriter, r *http.Request) {
-	name := r.URL.Query().Get("name")
-	if name == "" {
-		// No ID provided — serve sessions list
-		characters(w, r)
-		return
-	} else {
-		characterDetailHandler(w, r)
-	}
-}
-
-func characters(w http.ResponseWriter, r *http.Request) {
+func CharactersHandler(w http.ResponseWriter, r *http.Request) {
 	characters, err := getCharacters()
 	if err != nil {
+		util.ErrPage(w, r, 500)
 		return
 	}
-	tmpl, err := template.ParseFiles("static/characters/index.html")
+	tmpl, err := template.ParseFiles(
+		"static/templates/head.html",
+		"static/templates/titlebar.html",
+		"static/characters/index.html",
+		"static/templates/footer.html",
+	)
 	if err != nil {
+		util.ErrPage(w, r, 500)
 		return
 	}
-	tmpl.Execute(w, characters)
+	tmpl.ExecuteTemplate(w, "base", characters)
 }
 
-func characterDetailHandler(w http.ResponseWriter, r *http.Request) {
-	name := r.URL.Query().Get("name")
+func CharacterDetailHandler(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	name := vars["name"]
 
-	characterName := name
+	characterName := strings.ReplaceAll(name, "_", " ")
 
-	tmpl, err := template.ParseFiles("static/characters/character.html")
+	tmpl, err := template.ParseFiles(
+		"static/templates/head.html",
+		"static/templates/titlebar.html",
+		"static/characters/character.html",
+		"static/templates/footer.html",
+	)
 	if err != nil {
-		http.Error(w, "Template error", http.StatusInternalServerError)
+		util.ErrPage(w, r, 500)
 		return
 	}
 
 	characters, _ := getCharacters()
 
 	var selected woa.Character
+	found := false
 	for _, a := range characters {
 		if a.Name == characterName {
 			selected = a
+			found = true
 		}
 	}
 
-	tmpl.Execute(w, selected)
+	if !found {
+		util.ErrPage(w, r, 404)
+		return
+	}
+
+	tmpl.ExecuteTemplate(w, "base", selected)
 }
 
 func loadCharacterMarkdown(path string) (woa.Character, error) {
@@ -75,12 +86,10 @@ func loadCharacterMarkdown(path string) (woa.Character, error) {
 
 		if strings.TrimSpace(line) == "---" {
 			if !metaStarted {
-				// First --- encountered, start reading metadata
 				inMeta = true
 				metaStarted = true
 				continue
 			} else if inMeta {
-				// Second --- encountered, stop reading metadata
 				inMeta = false
 				continue
 			}
@@ -104,13 +113,13 @@ func loadCharacterMarkdown(path string) (woa.Character, error) {
 				}
 			}
 		} else if metaStarted {
-			// Only collect markdown lines after metadata section has ended
 			mdLines = append(mdLines, line)
 		}
 	}
 
 	md := strings.Join(mdLines, "\n")
 	c.Body = util.MdToHTML([]byte(md))
+	c.NamePath = strings.ReplaceAll(c.Name, " ", "_")
 	return c, nil
 }
 

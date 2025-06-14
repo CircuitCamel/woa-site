@@ -8,55 +8,67 @@ import (
 	"text/template"
 	"warofages/internal/util"
 	"warofages/internal/woa"
+
+	"github.com/gorilla/mux"
 )
 
 func RulesHandler(w http.ResponseWriter, r *http.Request) {
-	rule := r.URL.Query().Get("rule")
-	if rule == "" {
-		rulesMainPage(w, r)
-		return
-	} else {
-		loadRule(w, r)
-	}
-}
-
-func rulesMainPage(w http.ResponseWriter, r *http.Request) {
 	rules, err := getRules()
 	if err != nil {
+		util.ErrPage(w, r, 500)
 		return
 	}
-	tmpl, err := template.ParseFiles("static/rules/index.html")
+	tmpl, err := template.ParseFiles(
+		"static/templates/head.html",
+		"static/templates/titlebar.html",
+		"static/rules/index.html",
+		"static/templates/footer.html",
+	)
 	if err != nil {
+		util.ErrPage(w, r, 500)
 		return
 	}
-	tmpl.Execute(w, rules)
+	tmpl.ExecuteTemplate(w, "base", rules)
 }
 
-func loadRule(w http.ResponseWriter, r *http.Request) {
-	rule := r.URL.Query().Get("rule")
+func RuleDetailHandler(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	rule := vars["rule"]
 
 	ruleID, _ := strconv.Atoi(rule)
 
-	tmpl, err := template.ParseFiles("static/rules/rule.html")
+	tmpl, err := template.ParseFiles(
+		"static/templates/head.html",
+		"static/templates/titlebar.html",
+		"static/rules/rule.html",
+		"static/templates/footer.html",
+	)
 	if err != nil {
-		http.Error(w, "Template error", http.StatusInternalServerError)
+		util.ErrPage(w, r, 500)
 		return
 	}
 
 	rules, _ := getRules()
 
 	var selected woa.Rule
+	found := false
 	for _, a := range rules {
 		if a.ID == ruleID {
 			selected = a
+			found = true
 		}
+	}
+
+	if !found {
+		util.ErrPage(w, r, 404)
+		return
 	}
 
 	databytes, _ := os.ReadFile(selected.Path)
 
 	selected.Body = util.MdToHTML(databytes)
 
-	tmpl.Execute(w, selected)
+	tmpl.ExecuteTemplate(w, "base", selected)
 }
 
 func getRules() ([]woa.Rule, error) {
