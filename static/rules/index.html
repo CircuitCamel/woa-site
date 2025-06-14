@@ -1,24 +1,13 @@
-<!DOCTYPE html>
-<html lang="en">
+{{define "title"}}Rules{{end}}
 
-<head>
-	<meta charset="UTF-8">
-	<title>Rules</title>
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<link rel="stylesheet" href="/static/styles/main.css">
-	<link rel="icon" type="image/x-icon" href="/static/images/tab_icons/d20_tab.ico">
-</head>
+{{define "tbTitle"}}Rules{{end}}
 
+{{define "content"}}
 <body>
-    <div class="title-bar">
-		<a href="javascript:history.back()" class="back-button"></a>
-		<h1 class="title">Rules</h1>
-	</div>
     <div class="buttondiv">
             {{range .}}
-            <button onclick="location='/rules/{{.ID}}'">Rule {{.ID}}</button>
+            <a href="/rules/{{.ID}}" class="button">Rule {{.ID}}</a>
             {{end}}
     </div>
 </body>
-
-</html>
+{{end}}

@@ -1,7 +1,9 @@
-button {
+.button {
     background-color: #4f6d7a;
     color: #d3d3d3;
+    text-decoration: none;
     font-size: 19px;
+    text-align: center;
     padding: 12px 24px;
     border: none;
     border-radius: 6px;
@@ -9,7 +11,7 @@ button {
     transition: background 0.3s ease, color 0.2s ease;
 }
 
-button:hover {
+.button:hover {
     background-color: #d3d3d3;
     color: #0b0d17;
 }

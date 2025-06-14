@@ -18,12 +18,17 @@ func RulesHandler(w http.ResponseWriter, r *http.Request) {
 		util.ErrPage(w, r, 500)
 		return
 	}
-	tmpl, err := template.ParseFiles("static/rules/index.html")
+	tmpl, err := template.ParseFiles(
+		"static/templates/head.html",
+		"static/templates/titlebar.html",
+		"static/rules/index.html",
+		"static/templates/footer.html",
+	)
 	if err != nil {
 		util.ErrPage(w, r, 500)
 		return
 	}
-	tmpl.Execute(w, rules)
+	tmpl.ExecuteTemplate(w, "base", rules)
 }
 
 func RuleDetailHandler(w http.ResponseWriter, r *http.Request) {
@@ -32,7 +37,12 @@ func RuleDetailHandler(w http.ResponseWriter, r *http.Request) {
 
 	ruleID, _ := strconv.Atoi(rule)
 
-	tmpl, err := template.ParseFiles("static/rules/rule.html")
+	tmpl, err := template.ParseFiles(
+		"static/templates/head.html",
+		"static/templates/titlebar.html",
+		"static/rules/rule.html",
+		"static/templates/footer.html",
+	)
 	if err != nil {
 		util.ErrPage(w, r, 500)
 		return
@@ -58,7 +68,7 @@ func RuleDetailHandler(w http.ResponseWriter, r *http.Request) {
 
 	selected.Body = util.MdToHTML(databytes)
 
-	tmpl.Execute(w, selected)
+	tmpl.ExecuteTemplate(w, "base", selected)
 }
 
 func getRules() ([]woa.Rule, error) {

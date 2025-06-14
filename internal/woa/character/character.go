@@ -19,12 +19,17 @@ func CharactersHandler(w http.ResponseWriter, r *http.Request) {
 		util.ErrPage(w, r, 500)
 		return
 	}
-	tmpl, err := template.ParseFiles("static/characters/index.html")
+	tmpl, err := template.ParseFiles(
+		"static/templates/head.html",
+		"static/templates/titlebar.html",
+		"static/characters/index.html",
+		"static/templates/footer.html",
+	)
 	if err != nil {
 		util.ErrPage(w, r, 500)
 		return
 	}
-	tmpl.Execute(w, characters)
+	tmpl.ExecuteTemplate(w, "base", characters)
 }
 
 func CharacterDetailHandler(w http.ResponseWriter, r *http.Request) {
@@ -33,7 +38,12 @@ func CharacterDetailHandler(w http.ResponseWriter, r *http.Request) {
 
 	characterName := strings.ReplaceAll(name, "_", " ")
 
-	tmpl, err := template.ParseFiles("static/characters/character.html")
+	tmpl, err := template.ParseFiles(
+		"static/templates/head.html",
+		"static/templates/titlebar.html",
+		"static/characters/character.html",
+		"static/templates/footer.html",
+	)
 	if err != nil {
 		util.ErrPage(w, r, 500)
 		return
@@ -55,7 +65,7 @@ func CharacterDetailHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	tmpl.Execute(w, selected)
+	tmpl.ExecuteTemplate(w, "base", selected)
 }
 
 func loadCharacterMarkdown(path string) (woa.Character, error) {
