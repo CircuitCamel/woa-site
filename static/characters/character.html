@@ -1,34 +1,20 @@
-<!DOCTYPE html>
-<html lang="en">
+{{define "title"}}{{.Name}}{{end}}
 
-<head>
-	<meta charset="UTF-8">
-	<title>{{.Name}}</title>
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<link rel="stylesheet" href="/static/styles/main.css">
-	<link rel="icon" type="image/x-icon" href="/static/images/tab_icons/d20_tab.ico">
-</head>
+{{define "tbTitle"}}{{.Name}}{{end}}
 
-<body>
-	<div class="title-bar">
-		<a href="javascript:history.back()" class="back-button"></a>
-		<h1 class="title">{{.Name}}</h1>
-	</div>
-
+{{define "content"}}
 	<div class="wiki-layout">
 		<div class="wiki-container">
 			{{.Body}}
 		</div>
 		<div class="character-properties">
-			<h2>Properties</h2>
+			<h2>About</h2>
 			<ul>
-                <li><strong>Level:</strong> {{.Level}}</li>
 				<li><strong>Race:</strong> {{.Race}}</li>
 				<li><strong>Class:</strong> {{.Class}}</li>
+                <li><strong>Level:</strong> {{.Level}}</li>
 				<li><strong>Age:</strong> {{.Age}}</li>
 			</ul>
 		</div>
-	</div>
-</body>
-
-</html>
+	</div> 
+{{end}}

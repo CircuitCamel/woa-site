@@ -1,6 +1,6 @@
 #!/bin/bash
 set -e
 
-git pull
-make build
-./bin/warofages
+cd "$(dirname "$0")/.."
+
+make full

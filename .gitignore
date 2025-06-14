@@ -85,3 +85,4 @@ tags
 *.pem
 *.crt
 *.key
+bin/

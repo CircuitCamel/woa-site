@@ -1,20 +1,7 @@
-<!DOCTYPE html>
-<html lang="en">
+{{define "title"}}Rule {{.ID}}{{end}}
 
-<head>
-	<meta charset="UTF-8">
-	<title>Rule {{.ID}}</title>
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<link rel="stylesheet" href="/static/styles/main.css">
-	<link rel="icon" type="image/x-icon" href="/static/images/tab_icons/d20_tab.ico">
-</head>
+{{define "tbTitle"}}Rule {{.ID}}{{end}}
 
-<body>
-    <div class="title-bar">
-		<a href="javascript:history.back()" class="back-button"></a>
-		<h1 class="title">Rule {{.ID}}</h1>
-	</div>
-        {{.Body}}
-</body>
-
-</html>
+{{define "content"}}
+    {{.Body}}
+{{end}}
