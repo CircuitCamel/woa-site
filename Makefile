@@ -9,7 +9,7 @@ build:
 clean:
 	rm ./bin/warofages && rm -d ./bin/
 
-updateAll: updateSubmodule updateSubmodule
+updateAll: updateRepo updateSubmodule
 
 updateRepo:
 	git pull
