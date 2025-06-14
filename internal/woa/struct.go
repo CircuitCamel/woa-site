@@ -1,9 +1,11 @@
 package woa
 
 type Session struct {
-	ID   int
-	Path string
-	Body string
+	ID    int
+	Path  string
+	Body  string
+	Time  string
+	Place string
 }
 
 type Rule struct {

@@ -1,24 +1,13 @@
-<!DOCTYPE html>
-<html lang="en">
+{{define "title"}}The Crew{{end}}
 
-<head>
-	<meta charset="UTF-8">
-	<title>The Crew</title>
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<link rel="stylesheet" href="/static/styles/main.css">
-	<link rel="icon" type="image/x-icon" href="/static/images/tab_icons/d20_tab.ico">
-</head>
+{{define "tbTitle"}}The Crew{{end}}
 
+{{define "content"}}
 <body>
-    <div class="title-bar">
-		<a href="javascript:history.back()" class="back-button"></a>
-		<h1 class="title">The Crew</h1>
-	</div>
     <div class="buttondiv">
             {{range .}}
-            <button onclick="location='/characters/{{.NamePath}}'">{{.Name}}</button>
+            <a href="/characters/{{.NamePath}}" class="button">{{.Name}}</a>
             {{end}}
     </div>
 </body>
-
-</html>
+{{end}}
