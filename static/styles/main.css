@@ -43,7 +43,8 @@ body {
 
 .title{
     margin: 0;
-    font-size: 1.5em
+    font-size: 1.5em;
+    padding-bottom: 0.25em;
 }
 
 .title-bar {
@@ -84,7 +85,10 @@ body {
 .wiki-layout {
     display: flex;
     gap: 40px;
-    padding: 20px;
+    padding-right: 20px;
+    padding-left: 20px;
+    padding-top: 2px;
+    padding-bottom: 20px;
     align-items: flex-start;
     flex-wrap: wrap;
 }
@@ -167,7 +171,6 @@ body {
         order: 1;
         width: 100%;
         max-width: none;
-        margin-bottom: 20px;
     }
 
     .wiki-container {
@@ -207,4 +210,23 @@ footer{
     padding: 1rem 0;
     font-size: 0.9rem;
     color: #666;
+}
+
+.breadcrumb {
+    list-style: none !important;
+    padding: 0;
+    padding-bottom: 10px;
+    display: flex;
+    justify-content: center;
+    text-decoration: none;
+}
+
+.breadcrumb span,
+.breadcrumb a{
+    text-decoration: none;
+    margin-inline: 5px;
+}
+
+.breadcrumb a:hover {
+    color: #fff;
 }
