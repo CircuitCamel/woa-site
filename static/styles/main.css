@@ -200,15 +200,11 @@ a {
     background-image: url('/static/images/ui/back-hover.png');
 }
 
-.myfoot{
-    margin-top: auto;
-    padding: 20px 1px 10px 1px;
-}
-
 footer{
     text-align: center;
     padding: 1rem 0;
     font-size: 0.9rem;
+    margin-top: auto;
     color: #666;
 }
 
