@@ -124,7 +124,7 @@ func loadCharacterMarkdown(path string) (woa.Character, error) {
 }
 
 func getCharacters() ([]woa.Character, error) {
-	files, err := filepath.Glob("./md/chars/*.md")
+	files, err := filepath.Glob("./md/characters/*.md")
 	if err != nil {
 		return nil, err
 	}
