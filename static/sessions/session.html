@@ -4,15 +4,15 @@
 
 {{define "content"}}
 	<div class="wiki-layout">
-		<div class="wiki-container">
-			{{.Body}}
-		</div>
 		<div class="character-properties">
 			<h2>Time & Place</h2>
 			<ul>
-                <li><strong>Time:</strong> {{.Time}}</li>
+				<li><strong>Time:</strong> {{.Time}}</li>
 				<li><strong>Place:</strong> {{.Place}}</li>
 			</ul>
+		</div>
+		<div class="wiki-container">
+			{{.Body}}
 		</div>
 	</div> 
 {{end}}

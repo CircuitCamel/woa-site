@@ -1,0 +1,13 @@
+{{define "title"}}Table Rules{{end}}
+
+{{define "tbTitle"}}Table Rules{{end}}
+
+{{define "content"}}
+<body>
+    <div class="buttondiv">
+        {{range .}}
+            <a href="/rules/table/{{.TitlePath}}" class="button">{{.Title}}</a>
+        {{end}} 
+    </div>
+</body>
+{{end}}

@@ -97,6 +97,8 @@ body {
     flex: 3;
     min-width: 0;
     order: 1;
+    margin-right: 5%;
+    margin-left: 5%;
 }
 
 .wiki-container h1,
@@ -113,7 +115,7 @@ body {
 }
 
 .wiki-container ul {
-    margin-left: 20px;
+    margin-left: 2.5px;
     margin-bottom: 10px;
 }
 
@@ -175,6 +177,11 @@ body {
 
     .wiki-container {
         order: 2;
+        margin-left: 5%;
+        margin-right: 5%;
+    }
+    .wiki-container ul {
+    margin-left: -20px;
     }
 }
 
@@ -200,15 +207,11 @@ a {
     background-image: url('/static/images/ui/back-hover.png');
 }
 
-.myfoot{
-    margin-top: auto;
-    padding: 20px 1px 10px 1px;
-}
-
 footer{
     text-align: center;
     padding: 1rem 0;
     font-size: 0.9rem;
+    margin-top: auto;
     color: #666;
 }
 

@@ -1,5 +1,3 @@
-.PHONY: run build clean
-
 run:
 	go run cmd/warofages/main.go
 

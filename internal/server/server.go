@@ -23,7 +23,10 @@ func StartServer(conf util.Config) {
 	mux.HandleFunc("/sessions", session.SessionsHandler)
 	mux.HandleFunc("/sessions/{session}/", session.SessionDetailHandler)
 	mux.HandleFunc("/rules", rule.RulesHandler)
-	mux.HandleFunc("/rules/{rule}/", rule.RuleDetailHandler)
+	mux.HandleFunc("/rules/mechanics/", rule.MechanicsHandler)
+	mux.HandleFunc("/rules/mechanics/{mechanic}", rule.MechanicDetailHandler)
+	mux.HandleFunc("/rules/table/", rule.TableRulesHandler)
+	mux.HandleFunc("/rules/table/{tablerule}", rule.TableRuleDetailHandler)
 
 	mux.PathPrefix("/static/").Handler(
 		http.StripPrefix("/static/", http.FileServer(http.Dir("./static"))),

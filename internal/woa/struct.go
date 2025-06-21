@@ -9,9 +9,10 @@ type Session struct {
 }
 
 type Rule struct {
-	ID   int
-	Path string
-	Body string
+	Path      string
+	Body      string
+	Title     string
+	TitlePath string
 }
 
 type Character struct {
