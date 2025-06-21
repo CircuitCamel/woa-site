@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"warofages/internal/cache"
 	"warofages/internal/util"
 	"warofages/internal/woa/character"
 	"warofages/internal/woa/landing"
@@ -14,6 +15,8 @@ import (
 )
 
 func StartServer(conf util.Config) {
+
+	go cache.LoadAll()
 
 	mux := mux.NewRouter().StrictSlash(true)
 
