@@ -16,8 +16,8 @@
 	<link rel="stylesheet" href="/static/styles/main.css">
 	<link rel="icon" type="image/x-icon" href="/static/images/tab_icons/d20_tab.ico">
 </head>
+{{template "titlebar" .}}
 <body>
-	{{template "titlebar" .}}
 	{{block "content" .}}{{end}}
 	{{template "footer" .}}
 </body>
