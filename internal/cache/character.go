@@ -60,7 +60,7 @@ func loadCharacterMarkdown(path string) (woa.Character, error) {
 
 	md := strings.Join(mdLines, "\n")
 	c.Body = util.MdToHTML([]byte(md))
-	c.NamePath = strings.ReplaceAll(c.Name, " ", "_")
+	c.NamePath = strings.ReplaceAll(c.Name, " ", "-")
 	return c, nil
 }
 

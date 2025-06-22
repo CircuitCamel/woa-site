@@ -14,7 +14,7 @@ func getTableRules() ([]woa.Rule, error) {
 	result := make([]woa.Rule, len(files))
 	for i, v := range files {
 		title := strings.Split(filepath.Base(v), ".")[0]
-		result[i] = woa.Rule{Path: v, Title: title, TitlePath: strings.ReplaceAll(title, " ", "_")}
+		result[i] = woa.Rule{Path: v, Title: title, TitlePath: strings.ReplaceAll(title, " ", "-")}
 	}
 	return result, nil
 }
