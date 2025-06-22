@@ -3,9 +3,8 @@ package rule
 import (
 	"net/http"
 	"os"
-	"path/filepath"
-	"strings"
 	"text/template"
+	"warofages/internal/cache"
 	"warofages/internal/util"
 	"warofages/internal/woa"
 
@@ -13,11 +12,6 @@ import (
 )
 
 func TableRulesHandler(w http.ResponseWriter, r *http.Request) {
-	rules, err := getTableRules()
-	if err != nil {
-		util.ErrPage(w, r, 500)
-		return
-	}
 	tmpl, err := template.ParseFiles(
 		"static/templates/head.html",
 		"static/templates/titlebar.html",
@@ -28,7 +22,7 @@ func TableRulesHandler(w http.ResponseWriter, r *http.Request) {
 		util.ErrPage(w, r, 500)
 		return
 	}
-	tmpl.ExecuteTemplate(w, "base", rules)
+	tmpl.ExecuteTemplate(w, "base", cache.TableRules)
 }
 
 func TableRuleDetailHandler(w http.ResponseWriter, r *http.Request) {
@@ -46,11 +40,9 @@ func TableRuleDetailHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	mechanics, _ := getTableRules()
-
 	var selected woa.Rule
 	found := false
-	for _, a := range mechanics {
+	for _, a := range cache.TableRules {
 		if a.TitlePath == tablerule {
 			selected = a
 			found = true
@@ -67,17 +59,4 @@ func TableRuleDetailHandler(w http.ResponseWriter, r *http.Request) {
 	selected.Body = util.MdToHTML(databytes)
 
 	tmpl.ExecuteTemplate(w, "base", selected)
-}
-
-func getTableRules() ([]woa.Rule, error) {
-	files, err := filepath.Glob("./md/rules/table/*.md")
-	if err != nil {
-		return nil, err
-	}
-	result := make([]woa.Rule, len(files))
-	for i, v := range files {
-		title := strings.Split(filepath.Base(v), ".")[0]
-		result[i] = woa.Rule{Path: v, Title: title, TitlePath: strings.ReplaceAll(title, " ", "_")}
-	}
-	return result, nil
 }
