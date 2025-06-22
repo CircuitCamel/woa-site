@@ -2,7 +2,6 @@ package character
 
 import (
 	"net/http"
-	"strings"
 	"text/template"
 	"warofages/internal/cache"
 	"warofages/internal/util"
@@ -29,8 +28,6 @@ func CharacterDetailHandler(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	name := vars["name"]
 
-	characterName := strings.ReplaceAll(name, "_", " ")
-
 	tmpl, err := template.ParseFiles(
 		"static/templates/head.html",
 		"static/templates/titlebar.html",
@@ -45,7 +42,7 @@ func CharacterDetailHandler(w http.ResponseWriter, r *http.Request) {
 	var selected woa.Character
 	found := false
 	for _, a := range cache.Characters {
-		if a.Name == characterName {
+		if a.NamePath == name {
 			selected = a
 			found = true
 		}
