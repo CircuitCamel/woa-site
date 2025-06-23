@@ -3,7 +3,6 @@ package rule
 import (
 	"net/http"
 	"os"
-	"text/template"
 	"warofages/internal/cache"
 	"warofages/internal/util"
 	"warofages/internal/woa"
@@ -12,33 +11,12 @@ import (
 )
 
 func TableRulesHandler(w http.ResponseWriter, r *http.Request) {
-	tmpl, err := template.ParseFiles(
-		"static/templates/head.html",
-		"static/templates/titlebar.html",
-		"static/rules/table/index.html",
-		"static/templates/footer.html",
-	)
-	if err != nil {
-		util.ErrPage(w, r, 500)
-		return
-	}
-	tmpl.ExecuteTemplate(w, "base", cache.TableRules)
+	cache.TableListTmpl.ExecuteTemplate(w, "base", cache.TableRules)
 }
 
 func TableRuleDetailHandler(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	tablerule := vars["tablerule"]
-
-	tmpl, err := template.ParseFiles(
-		"static/templates/head.html",
-		"static/templates/titlebar.html",
-		"static/rules/table/rule.html",
-		"static/templates/footer.html",
-	)
-	if err != nil {
-		util.ErrPage(w, r, 500)
-		return
-	}
 
 	var selected woa.Rule
 	found := false
@@ -58,5 +36,5 @@ func TableRuleDetailHandler(w http.ResponseWriter, r *http.Request) {
 
 	selected.Body = util.MdToHTML(databytes)
 
-	tmpl.ExecuteTemplate(w, "base", selected)
+	cache.TableTmpl.ExecuteTemplate(w, "base", selected)
 }

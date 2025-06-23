@@ -2,7 +2,6 @@ package character
 
 import (
 	"net/http"
-	"text/template"
 	"warofages/internal/cache"
 	"warofages/internal/util"
 	"warofages/internal/woa"
@@ -11,33 +10,12 @@ import (
 )
 
 func CharactersHandler(w http.ResponseWriter, r *http.Request) {
-	tmpl, err := template.ParseFiles(
-		"static/templates/head.html",
-		"static/templates/titlebar.html",
-		"static/characters/index.html",
-		"static/templates/footer.html",
-	)
-	if err != nil {
-		util.ErrPage(w, r, 500)
-		return
-	}
-	tmpl.ExecuteTemplate(w, "base", cache.Characters)
+	cache.CharListTmpl.ExecuteTemplate(w, "base", cache.Characters)
 }
 
 func CharacterDetailHandler(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	name := vars["name"]
-
-	tmpl, err := template.ParseFiles(
-		"static/templates/head.html",
-		"static/templates/titlebar.html",
-		"static/characters/character.html",
-		"static/templates/footer.html",
-	)
-	if err != nil {
-		util.ErrPage(w, r, 500)
-		return
-	}
 
 	var selected woa.Character
 	found := false
@@ -53,5 +31,5 @@ func CharacterDetailHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	tmpl.ExecuteTemplate(w, "base", selected)
+	cache.CharTmpl.ExecuteTemplate(w, "base", selected)
 }
