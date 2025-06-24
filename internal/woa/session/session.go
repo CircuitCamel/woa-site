@@ -3,7 +3,6 @@ package session
 import (
 	"net/http"
 	"strconv"
-	"text/template"
 	"warofages/internal/cache"
 	"warofages/internal/util"
 	"warofages/internal/woa"
@@ -12,17 +11,7 @@ import (
 )
 
 func SessionsHandler(w http.ResponseWriter, r *http.Request) {
-	tmpl, err := template.ParseFiles(
-		"static/templates/head.html",
-		"static/templates/titlebar.html",
-		"static/sessions/index.html",
-		"static/templates/footer.html",
-	)
-	if err != nil {
-		util.ErrPage(w, r, 500)
-		return
-	}
-	tmpl.ExecuteTemplate(w, "base", cache.Sessions)
+	cache.SessionListTmpl.ExecuteTemplate(w, "base", cache.Sessions)
 }
 
 func SessionDetailHandler(w http.ResponseWriter, r *http.Request) {
@@ -30,17 +19,6 @@ func SessionDetailHandler(w http.ResponseWriter, r *http.Request) {
 	id := vars["session"]
 
 	sessionID, _ := strconv.Atoi(id)
-
-	tmpl, err := template.ParseFiles(
-		"static/templates/head.html",
-		"static/templates/titlebar.html",
-		"static/sessions/session.html",
-		"static/templates/footer.html",
-	)
-	if err != nil {
-		util.ErrPage(w, r, 500)
-		return
-	}
 
 	var selected woa.Session
 	found := false
@@ -57,5 +35,5 @@ func SessionDetailHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	tmpl.ExecuteTemplate(w, "base", selected)
+	cache.SessionTmpl.ExecuteTemplate(w, "base", selected)
 }
