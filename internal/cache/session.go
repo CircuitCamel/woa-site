@@ -52,6 +52,7 @@ func loadSessionMarkdown(path string) (woa.Session, error) {
 		}
 	}
 	md := strings.Join(mdLines, "\n")
+	md = util.AddLinks(md)
 	s.Body = util.MdToHTML([]byte(md))
 	return s, nil
 

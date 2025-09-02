@@ -10,18 +10,20 @@ func LoadConfig() Config {
 	godotenv.Load()
 
 	return Config{
-		ENV:  fallback(os.Getenv("ENV"), "development"),
-		CRT:  os.Getenv("CRT"),
-		KEY:  os.Getenv("KEY"),
-		PORT: fallback(os.Getenv("PORT"), "5098"),
+		ENV:   fallback(os.Getenv("ENV"), "development"),
+		CRT:   os.Getenv("CRT"),
+		KEY:   os.Getenv("KEY"),
+		PORT:  fallback(os.Getenv("PORT"), "5098"),
+		LINKS: os.Getenv("LINKS"),
 	}
 }
 
 type Config struct {
-	ENV  string
-	CRT  string
-	KEY  string
-	PORT string
+	ENV   string
+	CRT   string
+	KEY   string
+	PORT  string
+	LINKS string
 }
 
 func fallback(value, def string) string {
