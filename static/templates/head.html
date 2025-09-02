@@ -9,6 +9,7 @@
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
 	<meta charset="UTF-8">
 	<title>{{block "title" .}}War Of Ages{{end}}</title>
@@ -17,9 +18,11 @@
 	<link rel="icon" type="image/x-icon" href="/static/images/tab_icons/d20_tab.ico">
 </head>
 {{template "titlebar" .}}
+
 <body>
 	{{block "content" .}}{{end}}
 	{{template "footer" .}}
 </body>
+
 </html>
 {{end}}

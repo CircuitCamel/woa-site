@@ -3,11 +3,12 @@
 {{define "tbTitle"}}Sessions{{end}}
 
 {{define "content"}}
+
 <body>
     <div class="buttondiv">
-            {{range .}}
-            <a href="/sessions/{{.ID}}" class="button">Session {{.ID}}</a>
-            {{end}}
+        {{range .}}
+        <a href="/sessions/{{.ID}}" class="button">Session {{.ID}}</a>
+        {{end}}
     </div>
 </body>
 {{end}}

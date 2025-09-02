@@ -16,7 +16,8 @@
     color: #0b0d17;
 }
 
-html, body {
+html,
+body {
     height: 100%;
     margin: 2.5px;
     padding: 0;
@@ -41,7 +42,7 @@ body {
     gap: 4px;
 }
 
-.title{
+.title {
     margin: 0;
     font-size: 1.5em;
     padding-bottom: 0.25em;
@@ -54,9 +55,9 @@ body {
     gap: 10px;
 }
 
-.title-bar-icon{
-    width:42px;
-    height:42px;
+.title-bar-icon {
+    width: 42px;
+    height: 42px;
 }
 
 .character-container {
@@ -65,7 +66,7 @@ body {
     padding: 20px;
     background-color: #001a33;
     border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0,0,0,0.5);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
 }
 
 .character-info p {
@@ -180,8 +181,9 @@ body {
         margin-left: 5%;
         margin-right: 5%;
     }
+
     .wiki-container ul {
-    margin-left: -20px;
+        margin-left: -20px;
     }
 }
 
@@ -190,10 +192,10 @@ a {
     text-decoration: underline;
 }
 
-.back-button{
-    display:inline-block;
-    width:42px;
-    height:42px;
+.back-button {
+    display: inline-block;
+    width: 42px;
+    height: 42px;
     background-image: url('/static/images/ui/back.png');
     background-size: contain;
     background-position: center;
@@ -203,11 +205,11 @@ a {
     transition: background 0.3s ease, color 0.2s ease;
 }
 
-.back-button:hover{
+.back-button:hover {
     background-image: url('/static/images/ui/back-hover.png');
 }
 
-footer{
+footer {
     text-align: center;
     padding: 1rem 0;
     font-size: 0.9rem;
@@ -225,7 +227,7 @@ footer{
 }
 
 .breadcrumb span,
-.breadcrumb a{
+.breadcrumb a {
     text-decoration: none;
     margin-inline: 5px;
 }

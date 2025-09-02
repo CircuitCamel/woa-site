@@ -3,11 +3,12 @@
 {{define "tbTitle"}}The Crew{{end}}
 
 {{define "content"}}
+
 <body>
     <div class="buttondiv">
-            {{range .}}
-            <a href="/characters/{{.NamePath}}" class="button">{{.Name}}</a>
-            {{end}}
+        {{range .}}
+        <a href="/characters/{{.NamePath}}" class="button">{{.Name}}</a>
+        {{end}}
     </div>
 </body>
 {{end}}

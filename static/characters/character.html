@@ -3,18 +3,18 @@
 {{define "tbTitle"}}{{.Name}}{{end}}
 
 {{define "content"}}
-	<div class="wiki-layout">
-		<div class="wiki-container">
-			{{.Body}}
-		</div>
-		<div class="character-properties">
-			<h2>About</h2>
-			<ul>
-				<li><strong>Race:</strong> {{.Race}}</li>
-				<li><strong>Class:</strong> {{.Class}}</li>
-                <li><strong>Level:</strong> {{.Level}}</li>
-				<li><strong>Age:</strong> {{.Age}}</li>
-			</ul>
-		</div>
-	</div> 
+<div class="wiki-layout">
+	<div class="wiki-container">
+		{{.Body}}
+	</div>
+	<div class="character-properties">
+		<h2>About</h2>
+		<ul>
+			<li><strong>Race:</strong> {{.Race}}</li>
+			<li><strong>Class:</strong> {{.Class}}</li>
+			<li><strong>Level:</strong> {{.Level}}</li>
+			<li><strong>Age:</strong> {{.Age}}</li>
+		</ul>
+	</div>
+</div>
 {{end}}

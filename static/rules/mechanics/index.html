@@ -3,11 +3,12 @@
 {{define "tbTitle"}}Mechanics{{end}}
 
 {{define "content"}}
+
 <body>
     <div class="buttondiv">
         {{range .}}
-            <a href="/rules/mechanics/{{.TitlePath}}" class="button">{{.Title}}</a>
-        {{end}} 
+        <a href="/rules/mechanics/{{.TitlePath}}" class="button">{{.Title}}</a>
+        {{end}}
     </div>
 </body>
 {{end}}
