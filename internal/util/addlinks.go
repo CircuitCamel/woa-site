@@ -6,21 +6,25 @@ import (
 )
 
 func AddLinks(text string) string {
-	var result string
+	result := text
 	file, err := os.ReadFile(LoadConfig().LINKS)
 	if err != nil {
 		return text
 	}
-	links := LinkArray(string(file))
+	links := linkArray(string(file))
 
-	for key, value := range links {
-		result = strings.Replace(text, key, value, 1)
+	for ref, path := range links {
+		parts := strings.Split(ref, " ")
+		if len(parts) == 1 {
+			result = strings.Replace(result, ref, mdLinkMaker(ref, path), 1)
+		} else if len(parts) == 2 {
+			result = nameReplace(parts, result, path)
+		}
 	}
-
 	return result
 }
 
-func LinkArray(file string) map[string]string {
+func linkArray(file string) map[string]string {
 	array := make(map[string]string)
 	lines := strings.Split(file, "\n")
 
@@ -30,4 +34,25 @@ func LinkArray(file string) map[string]string {
 	}
 
 	return array
+}
+
+func nameReplace(parts []string, text string, path string) string {
+	var result string
+	result = strings.Replace(text, strings.Join(parts, " "), mdLinkMaker(strings.Join(parts, " "), path), 1)
+	if result != text {
+		return result
+	}
+	result = strings.Replace(text, parts[0], mdLinkMaker(parts[0], path), 1)
+	if result != text {
+		return result
+	}
+	result = strings.Replace(text, parts[1], mdLinkMaker(parts[1], path), 1)
+	if result != text {
+		return result
+	}
+	return result
+}
+
+func mdLinkMaker(ref, path string) string {
+	return "[" + ref + "]" + "(" + path + ")"
 }
