@@ -56,8 +56,13 @@ body {
 }
 
 .title-bar-icon {
+    background-image: url('/static/images/page_icons/d20_page.svg');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
     width: 42px;
     height: 42px;
+    display: inline-block;
 }
 
 .character-container {

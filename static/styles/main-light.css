@@ -53,4 +53,8 @@
     .breadcrumb a:hover {
         color: #000;
     }
+
+    .title-bar-icon{
+        background-image: url(/static/images/page_icons/d20_page_light.svg);
+    }
 }
