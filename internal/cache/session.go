@@ -70,5 +70,6 @@ func getSessions() ([]woa.Session, error) {
 			Body: result[i].Body, Time: result[i].Time,
 			Place: result[i].Place}
 	}
-	return result, nil
+
+	return util.RevArr(result), nil
 }

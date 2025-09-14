@@ -22,17 +22,17 @@ func StartServer(conf util.Config) {
 
 	mux.HandleFunc("/", landing.Index)
 	mux.HandleFunc("/characters", character.CharactersHandler)
-	mux.HandleFunc("/characters/{name}/", character.CharacterDetailHandler)
+	mux.HandleFunc("/characters/{name}", character.CharacterDetailHandler)
 	mux.HandleFunc("/sessions", session.SessionsHandler)
-	mux.HandleFunc("/sessions/{session}/", session.SessionDetailHandler)
+	mux.HandleFunc("/sessions/{session}", session.SessionDetailHandler)
 	mux.HandleFunc("/rules", rule.RulesHandler)
-	mux.HandleFunc("/rules/mechanics/", rule.MechanicsHandler)
+	mux.HandleFunc("/rules/mechanics", rule.MechanicsHandler)
 	mux.HandleFunc("/rules/mechanics/{mechanic}", rule.MechanicDetailHandler)
-	mux.HandleFunc("/rules/table/", rule.TableRulesHandler)
+	mux.HandleFunc("/rules/table", rule.TableRulesHandler)
 	mux.HandleFunc("/rules/table/{tablerule}", rule.TableRuleDetailHandler)
 
-	mux.PathPrefix("/static/").Handler(
-		http.StripPrefix("/static/", http.FileServer(http.Dir("./static"))),
+	mux.PathPrefix("/static").Handler(
+		http.StripPrefix("/static", http.FileServer(http.Dir("./static"))),
 	)
 	mux.NotFoundHandler = http.HandlerFunc(notfound)
 

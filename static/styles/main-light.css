@@ -1,0 +1,56 @@
+@media (prefers-color-scheme: light) {
+    .button {
+        background-color: #e0e0e0;
+        color: #333333;
+    }
+
+    .button:hover {
+        background-color: #333333;
+        color: #ffffff;
+    }
+
+    body {
+        background-color: #fdfdfd;
+        color: #222222;
+    }
+
+    .character-container {
+        background-color: #ffffff;
+    }
+
+    .character-info strong {
+        color: #000000;
+    }
+
+    .wiki-container h1,
+    .wiki-container h2,
+    .wiki-container h3 {
+        color: #222222;
+    }
+
+    .character-summary {
+        background-color: #f2f2f2;
+        box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+    }
+
+    .character-properties {
+        background-color: #fafafa;
+        border: 1px solid #ddd;
+    }
+
+    .character-properties h2 {
+        border-bottom: 1px solid #999;
+    }
+
+    a {
+        color: #3366cc;
+    }
+
+    footer {
+        color: #555;
+    }
+
+    .breadcrumb a:hover {
+        color: #000;
+    }
+}
