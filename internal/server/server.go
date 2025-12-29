@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"strings"
 	"warofages/internal/cache"
 	"warofages/internal/util"
 	"warofages/internal/woa/character"
@@ -37,15 +38,23 @@ func StartServer(conf util.Config) {
 	mux.NotFoundHandler = http.HandlerFunc(notfound)
 
 	fmt.Printf("Server running on port: %s", conf.PORT)
-	if conf.ENV == "production" {
-		http.ListenAndServeTLS(":"+conf.PORT, conf.CRT, conf.KEY, mux)
-	} else if conf.ENV == "staging" {
-		log.Fatal(http.ListenAndServeTLS(":"+conf.PORT, conf.CRT, conf.KEY, mux))
-	} else {
-		log.Fatal(http.ListenAndServe(":"+conf.PORT, mux))
+	switch conf.ENV {
+	case "production":
+		http.ListenAndServeTLS(":"+conf.PORT, conf.CRT, conf.KEY, lowerCaseURI(mux))
+	case "staging":
+		log.Fatal(http.ListenAndServeTLS(":"+conf.PORT, conf.CRT, conf.KEY, lowerCaseURI(mux)))
+	default:
+		log.Fatal(http.ListenAndServe(":"+conf.PORT, lowerCaseURI(mux)))
 	}
 }
 
 func notfound(w http.ResponseWriter, r *http.Request) {
 	util.ErrPage(w, r, 404)
+}
+
+func lowerCaseURI(h http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		r.URL.Path = strings.ToLower(r.URL.Path)
+		h.ServeHTTP(w, r)
+	})
 }
