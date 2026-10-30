@@ -1,0 +1,14 @@
+{{define "title"}}NPCs{{end}}
+
+{{define "tbTitle"}}NPCs{{end}}
+
+{{define "content"}}
+
+<body>
+    <div class="buttondiv">
+        {{range .}}
+        <a href="/npcs/{{.NamePath}}" class="button">{{.Name}}</a>
+        {{end}}
+    </div>
+</body>
+{{end}}

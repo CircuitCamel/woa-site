@@ -10,6 +10,8 @@ var (
 	Sessions         []woa.Session
 	Mechanics        []woa.Rule
 	TableRules       []woa.Rule
+	NPCs             []woa.NPC
+	Items            []woa.Item
 	CharListTmpl     *template.Template
 	CharTmpl         *template.Template
 	SessionListTmpl  *template.Template
@@ -19,6 +21,10 @@ var (
 	MechanicTmpl     *template.Template
 	TableListTmpl    *template.Template
 	TableTmpl        *template.Template
+	NPCListTmpl      *template.Template
+	NPCTmpl          *template.Template
+	ItemListTmpl     *template.Template
+	ItemTmpl         *template.Template
 )
 
 func LoadAll() {
@@ -37,6 +43,14 @@ func LoadAll() {
 		return
 	}
 	TableRules, err = getTableRules()
+	if err != nil {
+		return
+	}
+	NPCs, err = getNPCs()
+	if err != nil {
+		return
+	}
+	Items, err = getItems()
 	if err != nil {
 		return
 	}

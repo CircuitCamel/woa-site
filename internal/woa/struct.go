@@ -24,3 +24,22 @@ type Character struct {
 	Level    string
 	Body     string
 }
+
+type NPC struct {
+	Name       string
+	NamePath   string
+	Race       string
+	Occupation string
+	Location   string
+	Status     string
+	Body       string
+}
+
+type Item struct {
+	Name       string
+	NamePath   string
+	Type       string
+	Rarity     string
+	Attunement string
+	Body       string
+}

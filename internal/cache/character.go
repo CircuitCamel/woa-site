@@ -1,66 +1,26 @@
 package cache
 
 import (
-	"bufio"
-	"os"
 	"path/filepath"
-	"strings"
 	"warofages/internal/util"
 	"warofages/internal/woa"
 )
 
 func loadCharacterMarkdown(path string) (woa.Character, error) {
-	file, err := os.Open(path)
+	meta, body, err := parseFrontmatter(path)
 	if err != nil {
 		return woa.Character{}, err
 	}
-	defer file.Close()
 
-	var c woa.Character
-	var mdLines []string
-	scanner := bufio.NewScanner(file)
-	inMeta := false
-	metaStarted := false
-
-	for scanner.Scan() {
-		line := scanner.Text()
-
-		if strings.TrimSpace(line) == "---" {
-			if !metaStarted {
-				inMeta = true
-				metaStarted = true
-				continue
-			} else if inMeta {
-				inMeta = false
-				continue
-			}
-		}
-
-		if inMeta {
-			if parts := strings.SplitN(line, ":", 2); len(parts) == 2 {
-				key := strings.TrimSpace(parts[0])
-				val := strings.TrimSpace(parts[1])
-				switch key {
-				case "Name":
-					c.Name = val
-				case "Race":
-					c.Race = val
-				case "Class":
-					c.Class = val
-				case "Age":
-					c.Age = val
-				case "Level":
-					c.Level = val
-				}
-			}
-		} else if metaStarted {
-			mdLines = append(mdLines, line)
-		}
+	c := woa.Character{
+		Name:  meta["Name"],
+		Race:  meta["Race"],
+		Class: meta["Class"],
+		Age:   meta["Age"],
+		Level: meta["Level"],
 	}
-
-	md := strings.Join(mdLines, "\n")
-	c.Body = util.MdToHTML([]byte(md))
-	c.NamePath = strings.ToLower(strings.ReplaceAll(c.Name, " ", "-"))
+	c.Body = util.MdToHTML([]byte(body))
+	c.NamePath = slug(c.Name, path)
 	return c, nil
 }
 

@@ -1,0 +1,20 @@
+{{define "title"}}{{.Name}}{{end}}
+
+{{define "tbTitle"}}{{.Name}}{{end}}
+
+{{define "content"}}
+<div class="wiki-layout">
+	<div class="wiki-container">
+		{{.Body}}
+	</div>
+	<div class="character-properties">
+		<h2>About</h2>
+		<ul>
+			<li><strong>Race:</strong> {{.Race}}</li>
+			<li><strong>Occupation:</strong> {{.Occupation}}</li>
+			<li><strong>Location:</strong> {{.Location}}</li>
+			<li><strong>Status:</strong> {{.Status}}</li>
+		</ul>
+	</div>
+</div>
+{{end}}

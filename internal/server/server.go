@@ -8,7 +8,9 @@ import (
 	"warofages/internal/cache"
 	"warofages/internal/util"
 	"warofages/internal/woa/character"
+	"warofages/internal/woa/item"
 	"warofages/internal/woa/landing"
+	"warofages/internal/woa/npc"
 	"warofages/internal/woa/rule"
 	"warofages/internal/woa/session"
 
@@ -31,6 +33,10 @@ func StartServer(conf util.Config) {
 	mux.HandleFunc("/rules/mechanics/{mechanic}", rule.MechanicDetailHandler)
 	mux.HandleFunc("/rules/table", rule.TableRulesHandler)
 	mux.HandleFunc("/rules/table/{tablerule}", rule.TableRuleDetailHandler)
+	mux.HandleFunc("/npcs", npc.NPCsHandler)
+	mux.HandleFunc("/npcs/{npc}", npc.NPCDetailHandler)
+	mux.HandleFunc("/items", item.ItemsHandler)
+	mux.HandleFunc("/items/{item}", item.ItemDetailHandler)
 
 	mux.PathPrefix("/static").Handler(
 		http.StripPrefix("/static", http.FileServer(http.Dir("./static"))),

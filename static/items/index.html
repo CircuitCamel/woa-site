@@ -1,0 +1,14 @@
+{{define "title"}}Items{{end}}
+
+{{define "tbTitle"}}Items{{end}}
+
+{{define "content"}}
+
+<body>
+    <div class="buttondiv">
+        {{range .}}
+        <a href="/items/{{.NamePath}}" class="button">{{.Name}}</a>
+        {{end}}
+    </div>
+</body>
+{{end}}

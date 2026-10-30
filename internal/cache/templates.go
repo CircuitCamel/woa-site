@@ -85,5 +85,41 @@ func LoadAllTemplates() error {
 	if err != nil {
 		return err
 	}
+	NPCListTmpl, err = template.ParseFiles(
+		"static/templates/head.html",
+		"static/templates/titlebar.html",
+		"static/npcs/index.html",
+		"static/templates/footer.html",
+	)
+	if err != nil {
+		return err
+	}
+	NPCTmpl, err = template.ParseFiles(
+		"static/templates/head.html",
+		"static/templates/titlebar.html",
+		"static/npcs/npc.html",
+		"static/templates/footer.html",
+	)
+	if err != nil {
+		return err
+	}
+	ItemListTmpl, err = template.ParseFiles(
+		"static/templates/head.html",
+		"static/templates/titlebar.html",
+		"static/items/index.html",
+		"static/templates/footer.html",
+	)
+	if err != nil {
+		return err
+	}
+	ItemTmpl, err = template.ParseFiles(
+		"static/templates/head.html",
+		"static/templates/titlebar.html",
+		"static/items/item.html",
+		"static/templates/footer.html",
+	)
+	if err != nil {
+		return err
+	}
 	return nil
 }
