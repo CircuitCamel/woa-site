@@ -1,0 +1,19 @@
+{{define "title"}}Account{{end}}
+
+{{define "tbTitle"}}Account{{end}}
+
+{{define "content"}}
+<main class="panel-page narrow">
+    {{template "authnav" .}}
+    {{if .User.MustChange}}<p class="banner banner-info">You're using a temporary password. Choose a new one to continue.</p>{{end}}
+    <h2>Change password</h2>
+    <form method="post" action="/account" class="stack">
+        <input type="text" name="username" value="{{.User.Username}}" autocomplete="username" hidden>
+        <label>Current password <input type="password" name="current_password" autocomplete="current-password" required></label>
+        <label>New password <input type="password" name="new_password" autocomplete="new-password" minlength="8" maxlength="72" required></label>
+        <label>Confirm new password <input type="password" name="confirm_password" autocomplete="new-password" minlength="8" maxlength="72" required></label>
+        <button type="submit" class="button">Change password</button>
+    </form>
+    <p class="hint">8 to 72 characters. Changing it logs you out everywhere else.</p>
+</main>
+{{end}}

@@ -86,3 +86,5 @@ tags
 *.crt
 *.key
 bin/
+# Character sheet database
+data/

@@ -1,0 +1,137 @@
+{{define "title"}}New Character{{end}}
+
+{{define "tbTitle"}}New Character{{end}}
+
+{{define "content"}}
+<main class="panel-page">
+    {{template "authnav" .}}
+    <div class="builder">
+        <form method="post" action="/sheets/new" id="builder-form" class="stack builder-form">
+            <section class="card">
+                <h2>Who are they?</h2>
+                <label>Name <input name="name" value="{{.Draft.Name}}" maxlength="100" required></label>
+                <label>Alignment
+                    <select name="alignment">
+                        {{range .Alignments}}<option {{if eq . $.Draft.Alignment}}selected{{end}}>{{.}}</option>{{end}}
+                    </select>
+                </label>
+            </section>
+
+            <section class="card">
+                <h2>Race</h2>
+                <label>Race
+                    <select name="race">
+                        {{range .Races}}
+                        {{$race := .}}
+                        {{if .Subraces}}
+                        <optgroup label="{{.Name}}">
+                            {{range .Subraces}}{{$v := printf "%s/%s" $race.Index .Index}}<option value="{{$v}}" {{if eq $v $.Draft.Race}}selected{{end}}>{{.Name}}</option>{{end}}
+                        </optgroup>
+                        {{else}}
+                        <option value="{{.Index}}" {{if eq .Index $.Draft.Race}}selected{{end}}>{{.Name}}</option>
+                        {{end}}
+                        {{end}}
+                        <option value="custom" {{if eq "custom" .Draft.Race}}selected{{end}}>Custom</option>
+                    </select>
+                </label>
+                <label>Custom race name <input name="race_custom" value="{{.Draft.RaceCustom}}" maxlength="100" placeholder="Only for a custom race"></label>
+                <fieldset>
+                    <legend>Half-elf: pick two abilities for +1</legend>
+                    <div class="check-grid">
+                        {{range .Abilities}}{{if ne .Key "cha"}}<label class="check"><input type="checkbox" name="bonus_choice" value="{{.Key}}" {{if index $.BonusPicked .Key}}checked{{end}}> {{.Name}}</label>{{end}}{{end}}
+                    </div>
+                </fieldset>
+            </section>
+
+            <section class="card">
+                <h2>Class</h2>
+                <label>Class
+                    <select name="class">
+                        {{range .Classes}}<option value="{{.Index}}" {{if eq .Index $.Draft.Class}}selected{{end}}>{{.Name}}</option>{{end}}
+                    </select>
+                </label>
+                <label>Subclass
+                    <select name="subclass">
+                        <option value="">Choose later</option>
+                        {{range .Classes}}
+                        {{$cl := .}}
+                        <optgroup label="{{.Name}}">
+                            {{range .Subclasses}}<option value="{{.Index}}" {{if eq .Index $.Draft.Subclass}}selected{{end}}>{{.Name}} (level {{.MinLevel}})</option>{{end}}
+                        </optgroup>
+                        {{end}}
+                    </select>
+                </label>
+                <label>Starting level <input type="number" name="level" min="1" max="20" value="{{.Draft.Level}}" required></label>
+                <p class="hint">Add more classes later with Level Up. A higher starting level uses average hit points. Add its ability score improvements on the Edit page.</p>
+            </section>
+
+            <section class="card">
+                <h2>Ability scores</h2>
+                <fieldset class="check-row">
+                    <legend>Method</legend>
+                    <label class="check"><input type="radio" name="method" value="standard" {{if eq .Draft.Method "standard"}}checked{{end}}> Standard array</label>
+                    <label class="check"><input type="radio" name="method" value="point" {{if eq .Draft.Method "point"}}checked{{end}}> Point buy</label>
+                    <label class="check"><input type="radio" name="method" value="manual" {{if eq .Draft.Method "manual"}}checked{{end}}> Manual or rolled</label>
+                </fieldset>
+                <div class="score-grid">
+                    {{range .Abilities}}<label>{{.Name}} <input type="number" name="score_{{.Key}}" min="1" max="30" value="{{.Score}}" required></label>{{end}}
+                </div>
+                <button type="submit" class="button" formaction="/sheets/new/roll" formnovalidate>Roll 4d6, drop the lowest</button>
+                <p class="hint">Enter scores before racial bonuses. Those are added for you.</p>
+            </section>
+
+            <section class="card">
+                <h2>Background</h2>
+                <label>Background
+                    <select name="background">
+                        {{range .Backgrounds}}<option value="{{.Index}}" {{if eq .Index $.Draft.Background}}selected{{end}}>{{.Name}}</option>{{end}}
+                        <option value="custom" {{if eq "custom" .Draft.Background}}selected{{end}}>Custom</option>
+                    </select>
+                </label>
+                <label>Custom background name <input name="background_custom" value="{{.Draft.BackgroundCustom}}" maxlength="100" placeholder="Only for a custom background"></label>
+            </section>
+
+            <section class="card">
+                <h2>Skills</h2>
+                <p class="hint">Pick your class skills, plus any from a custom background. Skills from your race and SRD background are added for you.</p>
+                <div class="check-grid">
+                    {{range .Skills}}<label class="check"><input type="checkbox" name="skills" value="{{.Index}}" {{if index $.Picked .Index}}checked{{end}}> {{.Name}}</label>{{end}}
+                </div>
+            </section>
+
+            <button type="submit" class="button button-primary">Create character</button>
+        </form>
+
+        <aside class="builder-side" id="builder-preview" aria-live="polite">
+            {{template "builder-preview" .Preview}}
+        </aside>
+    </div>
+    {{template "srd-note"}}
+    <script src="/static/scripts/builder.js" defer></script>
+</main>
+{{end}}
+
+{{define "builder-preview"}}
+<section class="card">
+    <h2>Summary</h2>
+    {{if .PointBuy}}<p class="point-buy">Point buy: <strong>{{.Spent}}</strong> of {{.Budget}} points spent</p>{{end}}
+    {{if .Error}}<p class="banner banner-error">{{.Error}}</p>{{end}}
+    {{with .Class}}
+    <p><strong>{{.Name}}</strong>: d{{.HitDie}} hit die.{{if .SkillChoose}} Pick {{.SkillChoose}} skills from: {{$.SkillNames}}.{{end}}</p>
+    {{range .OtherChoices}}<p class="hint">{{.}}</p>{{end}}
+    {{end}}
+    {{with .Race}}{{range .ChoiceHints}}<p class="hint">{{.}}</p>{{end}}{{if .LanguageChoose}}<p class="hint">Add {{.LanguageChoose}} extra language on the Edit page.</p>{{end}}{{end}}
+    {{if .D}}
+    <ul class="stat-list">
+        <li>Hit points <strong>{{.D.MaxHP}}</strong></li>
+        <li>Armor class <strong>{{.D.AC}}</strong></li>
+        <li>Initiative <strong>{{signed .D.Initiative}}</strong></li>
+        <li>Speed <strong>{{.D.Speed}} ft</strong></li>
+        <li>Proficiency <strong>{{signed .D.ProfBonus}}</strong></li>
+    </ul>
+    <div class="ability-row small">
+        {{range .D.Abilities}}<div class="ability"><span class="ability-name">{{upper .Key}}</span><strong>{{signed .Mod}}</strong><span class="ability-score">{{.Score}}</span></div>{{end}}
+    </div>
+    {{end}}
+</section>
+{{end}}

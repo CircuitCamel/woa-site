@@ -1,0 +1,591 @@
+{{define "panels"}}
+<section class="tab-panel {{if eq .Tab "actions"}}active{{end}}" data-panel="actions">
+    <div class="card">
+        <h2>Attacks</h2>
+        <div class="table-wrap">
+        <table>
+            <thead><tr><th>Name</th><th>To hit</th><th>Damage</th><th>Range</th></tr></thead>
+            <tbody>
+                {{range .D.Attacks}}
+                {{$what := printf "attack:%d" .ItemID}}
+                <tr>
+                    <td>{{.Name}}{{if not .Proficient}} <span class="hint">not proficient</span>{{end}}{{if .Properties}}<br><span class="hint">{{.Properties}}</span>{{end}}</td>
+                    <td>{{template "rollbtns" (dict "ID" $.C.ID "Tab" $.Tab "What" $what "Text" (signed .Bonus))}}</td>
+                    <td>
+                        <form class="roll-form" method="post" action="/sheets/{{$.C.ID}}/roll">
+                            <input type="hidden" name="tab" value="{{$.Tab}}">
+                            <input type="hidden" name="what" value="damage:{{.ItemID}}">
+                            <button class="chip" name="mode" value="">{{.Damage}} {{.DamageType}}</button>
+                            <button class="chip chip-small" name="mode" value="crit" title="Critical hit" aria-label="Critical hit">C</button>
+                        </form>
+                        {{if .TwoHanded}}
+                        <form class="roll-form" method="post" action="/sheets/{{$.C.ID}}/roll">
+                            <input type="hidden" name="tab" value="{{$.Tab}}">
+                            <input type="hidden" name="what" value="damage2:{{.ItemID}}">
+                            <button class="chip" name="mode" value="">{{.TwoHanded}} two-handed</button>
+                            <button class="chip chip-small" name="mode" value="crit" title="Critical hit" aria-label="Critical hit, two-handed">C</button>
+                        </form>
+                        {{end}}
+                    </td>
+                    <td>{{.RangeText}}</td>
+                </tr>
+                {{end}}
+            </tbody>
+        </table>
+        </div>
+        <p class="hint">Equip weapons on the Inventory tab to list them here.</p>
+    </div>
+
+    <div class="card no-print">
+        <h2>Dice</h2>
+        <form method="post" action="/sheets/{{.C.ID}}/roll" class="inline-form">
+            <input type="hidden" name="tab" value="{{.Tab}}">
+            <input type="hidden" name="what" value="custom">
+            <label>Dice <input name="expr" placeholder="2d6+3" maxlength="100" required></label>
+            <label>Label <input name="label" placeholder="Optional" maxlength="60"></label>
+            <button class="button button-small">Roll</button>
+        </form>
+    </div>
+
+    {{if .D.Resources}}
+    <div class="card">
+        <h2>Class resources</h2>
+        <ul class="plain-list">
+            {{range .D.Resources}}
+            <li class="resource">
+                <span>{{.Name}}: <strong>{{.Remaining}}</strong> of {{.Max}} <span class="hint">recharges on a {{.Recharge}} rest</span></span>
+                <form method="post" action="/sheets/{{$.C.ID}}/resource" class="roll-form">
+                    <input type="hidden" name="tab" value="{{$.Tab}}">
+                    <input type="hidden" name="key" value="{{.Key}}">
+                    <button class="chip" name="op" value="use" {{if not .Remaining}}disabled{{end}}>Use</button>
+                    <button class="chip" name="op" value="restore" {{if not .Used}}disabled{{end}}>Restore</button>
+                </form>
+            </li>
+            {{end}}
+        </ul>
+    </div>
+    {{end}}
+
+    <div class="card">
+        <h2>Hit dice</h2>
+        <ul class="plain-list">
+            {{range .D.HitDice}}
+            <li class="resource">
+                <span>{{.ClassName}}: <strong>{{.Remaining}}</strong> of {{.Total}} d{{.Die}}</span>
+                <form method="post" action="/sheets/{{$.C.ID}}/hitdie" class="roll-form">
+                    <input type="hidden" name="tab" value="{{$.Tab}}">
+                    <input type="hidden" name="class" value="{{.Class}}">
+                    <button class="chip" {{if not .Remaining}}disabled{{end}}>Spend and heal</button>
+                </form>
+            </li>
+            {{end}}
+        </ul>
+    </div>
+
+    <div class="card">
+        <h2>Conditions</h2>
+        {{if .C.Exhaustion}}<p>Exhaustion level {{.C.Exhaustion}}</p>{{end}}
+        <div class="condition-grid">
+            {{range .Conditions}}
+            <form method="post" action="/sheets/{{$.C.ID}}/condition">
+                <input type="hidden" name="tab" value="{{$.Tab}}">
+                <input type="hidden" name="condition" value="{{.Index}}">
+                <button class="chip {{if .Active}}chip-on{{end}}" aria-pressed="{{.Active}}" title="{{.Desc}}">{{.Name}}</button>
+            </form>
+            {{end}}
+        </div>
+        <form method="post" action="/sheets/{{.C.ID}}/exhaustion" class="inline-form">
+            <input type="hidden" name="tab" value="{{.Tab}}">
+            <label>Exhaustion level
+                <select name="level">
+                    <option value="0" {{if eq .C.Exhaustion 0}}selected{{end}}>0: none</option>
+                    <option value="1" {{if eq .C.Exhaustion 1}}selected{{end}}>1: disadvantage on ability checks</option>
+                    <option value="2" {{if eq .C.Exhaustion 2}}selected{{end}}>2: speed halved</option>
+                    <option value="3" {{if eq .C.Exhaustion 3}}selected{{end}}>3: disadvantage on attacks and saves</option>
+                    <option value="4" {{if eq .C.Exhaustion 4}}selected{{end}}>4: hit point maximum halved</option>
+                    <option value="5" {{if eq .C.Exhaustion 5}}selected{{end}}>5: speed reduced to 0</option>
+                    <option value="6" {{if eq .C.Exhaustion 6}}selected{{end}}>6: death</option>
+                </select>
+            </label>
+            <button class="button button-small">Set</button>
+        </form>
+    </div>
+</section>
+
+<section class="tab-panel {{if eq .Tab "spells"}}active{{end}}" data-panel="spells">
+    {{if .D.Casters}}
+    <div class="card">
+        <h2>Spellcasting</h2>
+        <div class="table-wrap">
+        <table>
+            <thead><tr><th>Class</th><th>Ability</th><th>Save DC</th><th>Attack</th><th>Cantrips</th><th>Spells</th></tr></thead>
+            <tbody>
+                {{range .D.Casters}}
+                <tr>
+                    <td>{{.ClassName}}</td>
+                    <td>{{upper .Ability}}</td>
+                    <td>{{.DC}}</td>
+                    <td>{{signed .Attack}}</td>
+                    <td>{{.CantripsHave}} of {{.Cantrips}}</td>
+                    <td>{{if .Prepares}}{{.Prepared}} of {{.PrepareLimit}} prepared{{else}}{{.KnownHave}} of {{.Known}} known{{end}}</td>
+                </tr>
+                {{end}}
+            </tbody>
+        </table>
+        </div>
+    </div>
+    {{end}}
+
+    {{if or .D.Slots .D.Pact}}
+    <div class="card">
+        <h2>Spell slots</h2>
+        <ul class="plain-list">
+            {{range .D.Slots}}
+            <li class="resource">
+                <span>{{ordinal .Level}} level: <strong>{{.Remaining}}</strong> of {{.Max}}</span>
+                <form method="post" action="/sheets/{{$.C.ID}}/slot" class="roll-form">
+                    <input type="hidden" name="tab" value="{{$.Tab}}">
+                    <input type="hidden" name="level" value="{{.Level}}">
+                    <button class="chip" name="op" value="use" {{if not .Remaining}}disabled{{end}}>Use</button>
+                    <button class="chip" name="op" value="restore" {{if not .Used}}disabled{{end}}>Restore</button>
+                </form>
+            </li>
+            {{end}}
+            {{with .D.Pact}}
+            <li class="resource">
+                <span>Pact, {{ordinal .Level}} level: <strong>{{.Remaining}}</strong> of {{.Max}}</span>
+                <form method="post" action="/sheets/{{$.C.ID}}/pact" class="roll-form">
+                    <input type="hidden" name="tab" value="{{$.Tab}}">
+                    <button class="chip" name="op" value="use" {{if not .Remaining}}disabled{{end}}>Use</button>
+                    <button class="chip" name="op" value="restore" {{if not .Used}}disabled{{end}}>Restore</button>
+                </form>
+            </li>
+            {{end}}
+        </ul>
+    </div>
+    {{end}}
+
+    {{range .SpellGroups}}
+    <div class="card">
+        <h2>{{.Label}}</h2>
+        {{range .Rows}}
+        <div class="spell-row">
+            <details class="detail" data-dialog>
+                <summary>{{.Name}}{{if .AlwaysPrepared}} <span class="hint">always prepared</span>{{end}}{{if and .NeedsPrep .Prepared}} <span class="hint">prepared</span>{{end}}{{if .Ritual}} <span class="hint">ritual</span>{{end}}{{if .Concentration}} <span class="hint">concentration</span>{{end}}{{if .Source}} <span class="hint">{{.Source}}</span>{{end}}</summary>
+                <div class="detail-body">
+                    <h3>{{.Name}}</h3>
+                    <p class="hint">{{if .School}}{{.School}}. {{end}}{{.CastingTime}}. {{.RangeText}}. {{.Components}}. {{.Duration}}.</p>
+                    <p class="prose">{{.Description}}</p>
+                    {{if .HigherLevel}}<p class="prose"><strong>At higher levels:</strong> {{.HigherLevel}}</p>{{end}}
+                </div>
+            </details>
+            <p class="hint">
+                {{if and .HasCaster .AttackType}}{{signed .Attack}} to hit. {{end}}
+                {{if and .HasCaster .SaveName}}DC {{.SaveDC}} {{.SaveName}} save. {{end}}
+                {{if .Damage}}{{.Damage}} {{.DamageType}}. {{end}}
+                {{if .Healing}}Heals {{.Healing}}. {{end}}
+            </p>
+            <form method="post" action="/sheets/{{$.C.ID}}/spell/cast" class="spell-form">
+                <input type="hidden" name="tab" value="{{$.Tab}}">
+                <input type="hidden" name="spell" value="{{.ID}}">
+                {{if .Level}}
+                <select name="slot" aria-label="Slot for {{.Name}}">
+                    {{if .Options}}{{range .Options}}<option value="{{.Value}}">{{.Label}}</option>{{end}}{{else}}<option value="{{.Level}}">No slots left</option>{{end}}
+                </select>
+                {{end}}
+                <button class="chip" name="op" value="cast" {{if not .CanCast}}disabled{{end}}>Cast</button>
+                {{if .Ritual}}<button class="chip" name="op" value="ritual">Ritual</button>{{end}}
+                {{if .AttackType}}<button class="chip" name="op" value="attack">Attack</button>{{end}}
+                {{if .Damage}}<button class="chip" name="op" value="damage">Damage</button>{{end}}
+                {{if .Healing}}<button class="chip" name="op" value="heal">Healing</button>{{end}}
+            </form>
+            <div class="spell-manage">
+                {{if .NeedsPrep}}
+                <form method="post" action="/sheets/{{$.C.ID}}/spell/prepare"><input type="hidden" name="tab" value="{{$.Tab}}"><input type="hidden" name="spell" value="{{.ID}}"><button class="chip {{if .Prepared}}chip-on{{end}}" aria-pressed="{{.Prepared}}">{{if .Prepared}}Prepared{{else}}Prepare{{end}}</button></form>
+                {{end}}
+                {{if not .AlwaysPrepared}}
+                <form method="post" action="/sheets/{{$.C.ID}}/spell/delete" data-confirm="Remove this spell?"><input type="hidden" name="tab" value="{{$.Tab}}"><input type="hidden" name="spell" value="{{.ID}}"><button class="chip">Remove</button></form>
+                {{end}}
+            </div>
+        </div>
+        {{end}}
+    </div>
+    {{else}}
+    <div class="card"><p>No spells yet. Search below to add some.</p></div>
+    {{end}}
+
+    <div class="card no-print">
+        <h2>Add spells</h2>
+        <form method="get" action="/sheets/{{.C.ID}}" class="inline-form" data-search="/sheets/compendium/spells" data-results="spell-results" data-no-swap>
+            <input type="hidden" name="tab" value="spells">
+            <label>Search <input type="search" name="spell_q" value="{{.SpellSearch.Query}}" autocomplete="off"></label>
+            <label>Level
+                <select name="spell_level">
+                    <option value="">Any</option>
+                    <option value="0" {{if eq .SpellSearch.Level 0}}selected{{end}}>Cantrip</option>
+                    {{range seq 9}}<option value="{{.}}" {{if eq . $.SpellSearch.Level}}selected{{end}}>{{.}}</option>{{end}}
+                </select>
+            </label>
+            <label>Class
+                <select name="spell_class">
+                    <option value="">Any</option>
+                    {{range .SpellSearch.Classes}}{{if .SpellAbility}}<option value="{{.Index}}" {{if eq .Index $.SpellSearch.Class}}selected{{end}}>{{.Name}}</option>{{end}}{{end}}
+                </select>
+            </label>
+            <button class="button button-small">Search</button>
+        </form>
+        <div id="spell-results">{{template "spell-results" .SpellSearch}}</div>
+        <details class="custom-form">
+            <summary>Add a custom spell</summary>
+            <form method="post" action="/sheets/{{.C.ID}}/spell/custom" class="stack">
+                <input type="hidden" name="tab" value="{{.Tab}}">
+                <div class="field-grid">
+                    <label>Name <input name="name" maxlength="100" required></label>
+                    <label>Level <input type="number" name="level" min="0" max="9" value="1"></label>
+                    <label>School <input name="school" maxlength="40"></label>
+                    <label>Casting time <input name="casting_time" maxlength="60" value="1 action"></label>
+                    <label>Range <input name="range" maxlength="60"></label>
+                    <label>Components <input name="components" maxlength="200"></label>
+                    <label>Duration <input name="duration" maxlength="60"></label>
+                    <label>Damage dice <input name="damage_dice" maxlength="40" placeholder="2d6"></label>
+                    <label>Damage type <input name="damage_type" maxlength="40"></label>
+                    <label>Class
+                        <select name="source_class"><option value="">None</option>{{range .D.Casters}}<option value="{{.Class}}">{{.ClassName}}</option>{{end}}</select>
+                    </label>
+                </div>
+                <label class="check"><input type="checkbox" name="ritual" value="1"> Ritual</label>
+                <label class="check"><input type="checkbox" name="concentration" value="1"> Concentration</label>
+                <label>Description <textarea name="description" rows="4"></textarea></label>
+                <button class="button button-small">Add spell</button>
+            </form>
+        </details>
+    </div>
+</section>
+
+<section class="tab-panel {{if eq .Tab "inventory"}}active{{end}}" data-panel="inventory">
+    <div class="card">
+        <h2>Currency</h2>
+        <form method="post" action="/sheets/{{.C.ID}}/currency" class="currency-form">
+            <input type="hidden" name="tab" value="{{.Tab}}">
+            <label>CP <input type="number" name="cp" min="0" value="{{.C.CP}}" data-stepper></label>
+            <label>SP <input type="number" name="sp" min="0" value="{{.C.SP}}" data-stepper></label>
+            <label>EP <input type="number" name="ep" min="0" value="{{.C.EP}}" data-stepper></label>
+            <label>GP <input type="number" name="gp" min="0" value="{{.C.GP}}" data-stepper></label>
+            <label>PP <input type="number" name="pp" min="0" value="{{.C.PP}}" data-stepper></label>
+            <button class="button button-small">Save</button>
+        </form>
+    </div>
+
+    <div class="card">
+        <p>Carrying <strong>{{pounds .D.Carried}} lb</strong> of {{.D.Carry}} lb. Attuned to <strong>{{.D.Attuned}}</strong> of 3 items.</p>
+    </div>
+
+    {{range .Items}}
+    <div class="card">
+        <h2>{{.Label}}</h2>
+        {{if eq .Label "Magic Items"}}<p class="hint">The SRD doesn't list base stats for magic armor and weapons. Under Edit, set the type and its AC or damage so that it counts on your sheet.</p>{{end}}
+        {{range .Rows}}
+        <div class="item-row">
+            <details class="detail" data-dialog>
+                <summary>{{.Name}}{{if gt .Qty 1}} × {{.Qty}}{{end}}{{if .Equipped}} <span class="hint">equipped</span>{{end}}{{if .Attuned}} <span class="hint">attuned</span>{{end}}</summary>
+                <div class="detail-body">
+                    <h3>{{.Name}}</h3>
+                    <p class="hint">{{if .Weight}}{{pounds .Weight}} lb each. {{end}}{{if .Cost}}{{.Cost}}. {{end}}{{if .DamageDice}}{{.DamageDice}} {{.DamageType}}. {{end}}{{if .Properties}}{{.Properties}}. {{end}}{{if .RangeText}}{{.RangeText}}. {{end}}{{if .ArmorBase}}AC {{.ArmorBase}}. {{end}}</p>
+                    {{if .Description}}<p class="prose">{{.Description}}</p>{{end}}
+                </div>
+            </details>
+            <div class="spell-manage">
+                {{if or .IsWeapon (eq .Kind "armor") (eq .Kind "shield") (eq .Kind "magic")}}
+                <form method="post" action="/sheets/{{$.C.ID}}/item/equip"><input type="hidden" name="tab" value="{{$.Tab}}"><input type="hidden" name="item" value="{{.ID}}"><button class="chip {{if .Equipped}}chip-on{{end}}" aria-pressed="{{.Equipped}}">{{if .Equipped}}Equipped{{else}}Equip{{end}}</button></form>
+                {{end}}
+                {{if .RequiresAttunement}}
+                <form method="post" action="/sheets/{{$.C.ID}}/item/attune"><input type="hidden" name="tab" value="{{$.Tab}}"><input type="hidden" name="item" value="{{.ID}}"><button class="chip {{if .Attuned}}chip-on{{end}}" aria-pressed="{{.Attuned}}">{{if .Attuned}}Attuned{{else}}Attune{{end}}</button></form>
+                {{end}}
+                <form method="post" action="/sheets/{{$.C.ID}}/item/delete" data-confirm="Remove this item?"><input type="hidden" name="tab" value="{{$.Tab}}"><input type="hidden" name="item" value="{{.ID}}"><button class="chip">Remove</button></form>
+            </div>
+            <details class="custom-form">
+                <summary>Edit</summary>
+                <form method="post" action="/sheets/{{$.C.ID}}/item/edit" class="stack">
+                    <input type="hidden" name="tab" value="{{$.Tab}}">
+                    <input type="hidden" name="item" value="{{.ID}}">
+                    {{template "item-fields" .}}
+                    <button class="button button-small">Save item</button>
+                </form>
+            </details>
+        </div>
+        {{end}}
+    </div>
+    {{else}}
+    <div class="card"><p>Your inventory is empty.</p></div>
+    {{end}}
+
+    {{if .StartOptions}}
+    <details class="card custom-form">
+        <summary>Starting equipment choices</summary>
+        <ul>{{range .StartOptions}}<li>{{.}}</li>{{end}}</ul>
+        <p class="hint">Your class's fixed items are already in your inventory. Add these choices below.</p>
+    </details>
+    {{end}}
+
+    <div class="card no-print">
+        <h2>Add items</h2>
+        <form method="get" action="/sheets/{{.C.ID}}" class="inline-form" data-search="/sheets/compendium/items" data-results="item-results" data-no-swap>
+            <input type="hidden" name="tab" value="inventory">
+            <label>Search <input type="search" name="item_q" value="{{.ItemSearch.Query}}" autocomplete="off"></label>
+            <label>Type
+                <select name="item_kind">
+                    <option value="">Any</option>
+                    <option value="weapon" {{if eq .ItemSearch.Kind "weapon"}}selected{{end}}>Weapons</option>
+                    <option value="armor" {{if eq .ItemSearch.Kind "armor"}}selected{{end}}>Armor</option>
+                    <option value="shield" {{if eq .ItemSearch.Kind "shield"}}selected{{end}}>Shields</option>
+                    <option value="gear" {{if eq .ItemSearch.Kind "gear"}}selected{{end}}>Gear</option>
+                    <option value="tool" {{if eq .ItemSearch.Kind "tool"}}selected{{end}}>Tools</option>
+                    <option value="mount" {{if eq .ItemSearch.Kind "mount"}}selected{{end}}>Mounts and vehicles</option>
+                    <option value="magic" {{if eq .ItemSearch.Kind "magic"}}selected{{end}}>Magic items</option>
+                </select>
+            </label>
+            <button class="button button-small">Search</button>
+        </form>
+        <div id="item-results">{{template "item-results" .ItemSearch}}</div>
+        <details class="custom-form">
+            <summary>Add a custom item</summary>
+            <form method="post" action="/sheets/{{.C.ID}}/item/custom" class="stack">
+                <input type="hidden" name="tab" value="{{.Tab}}">
+                {{template "item-fields" .BlankItem}}
+                <button class="button button-small">Add item</button>
+            </form>
+        </details>
+    </div>
+</section>
+
+<section class="tab-panel {{if eq .Tab "features"}}active{{end}}" data-panel="features">
+    {{range .FeatureGroups}}
+    <div class="card">
+        <h2>{{.Label}}</h2>
+        {{range .Rows}}
+        <div class="item-row">
+            <details class="detail" data-dialog>
+                <summary>{{.Name}}{{if .Level}} <span class="hint">level {{.Level}}</span>{{end}}</summary>
+                <div class="detail-body">
+                    <h3>{{.Name}}</h3>
+                    <p class="prose">{{.Description}}</p>
+                </div>
+            </details>
+            <div class="spell-manage">
+                {{if .UsesMax}}
+                <span>{{sub .UsesMax .UsesUsed}} of {{.UsesMax}} left{{if .Recharge}} <span class="hint">{{.Recharge}} rest</span>{{end}}</span>
+                <form method="post" action="/sheets/{{$.C.ID}}/feature/use" class="roll-form">
+                    <input type="hidden" name="tab" value="{{$.Tab}}">
+                    <input type="hidden" name="feature" value="{{.ID}}">
+                    <button class="chip" name="op" value="use" {{if ge .UsesUsed .UsesMax}}disabled{{end}}>Use</button>
+                    <button class="chip" name="op" value="restore" {{if not .UsesUsed}}disabled{{end}}>Restore</button>
+                </form>
+                {{end}}
+                {{if not .SRDIndex}}
+                <form method="post" action="/sheets/{{$.C.ID}}/feature/delete" data-confirm="Remove this feature?"><input type="hidden" name="tab" value="{{$.Tab}}"><input type="hidden" name="feature" value="{{.ID}}"><button class="chip">Remove</button></form>
+                {{end}}
+            </div>
+        </div>
+        {{end}}
+    </div>
+    {{end}}
+    <div class="card no-print">
+        <h2>Add a custom feature</h2>
+        <p class="hint">Use this for feats, homebrew abilities, or anything else you want to track.</p>
+        <form method="post" action="/sheets/{{.C.ID}}/feature/add" class="stack">
+            <input type="hidden" name="tab" value="{{.Tab}}">
+            <div class="field-grid">
+                <label>Name <input name="name" maxlength="100" required></label>
+                <label>Uses <input type="number" name="uses_max" min="0" value="0"></label>
+                <label>Recharges on
+                    <select name="recharge">
+                        <option value="">Never</option>
+                        <option value="short">Short rest</option>
+                        <option value="long">Long rest</option>
+                    </select>
+                </label>
+            </div>
+            <label>Description <textarea name="description" rows="3"></textarea></label>
+            <button class="button button-small">Add feature</button>
+        </form>
+    </div>
+</section>
+
+<section class="tab-panel {{if eq .Tab "background"}}active{{end}}" data-panel="background">
+    <form method="post" action="/sheets/{{.C.ID}}/text" class="stack card" data-autosave>
+        <input type="hidden" name="tab" value="{{.Tab}}">
+        <h2>Personality</h2>
+        <label>Personality traits <textarea name="personality" rows="3">{{.C.Personality}}</textarea></label>
+        <label>Ideals <textarea name="ideals" rows="2">{{.C.Ideals}}</textarea></label>
+        <label>Bonds <textarea name="bonds" rows="2">{{.C.Bonds}}</textarea></label>
+        <label>Flaws <textarea name="flaws" rows="2">{{.C.Flaws}}</textarea></label>
+        <h2>Appearance</h2>
+        <div class="field-grid">
+            <label>Age <input name="age" value="{{.C.Age}}" maxlength="40"></label>
+            <label>Height <input name="height" value="{{.C.Height}}" maxlength="40"></label>
+            <label>Weight <input name="weight_text" value="{{.C.WeightText}}" maxlength="40"></label>
+            <label>Eyes <input name="eyes" value="{{.C.Eyes}}" maxlength="40"></label>
+            <label>Skin <input name="skin" value="{{.C.Skin}}" maxlength="40"></label>
+            <label>Hair <input name="hair" value="{{.C.Hair}}" maxlength="40"></label>
+            <label>Faith <input name="faith" value="{{.C.Faith}}" maxlength="100"></label>
+        </div>
+        <label>Appearance <textarea name="appearance" rows="3">{{.C.Appearance}}</textarea></label>
+        <h2>History</h2>
+        <label>Backstory <textarea name="backstory" rows="6">{{.C.Backstory}}</textarea></label>
+        <label>Allies and organizations <textarea name="allies" rows="3">{{.C.Allies}}</textarea></label>
+        <div class="save-row"><button class="button button-small">Save</button> <span class="save-state" data-save-state aria-live="polite"></span></div>
+    </form>
+</section>
+
+<section class="tab-panel {{if eq .Tab "notes"}}active{{end}}" data-panel="notes">
+    <form method="post" action="/sheets/{{.C.ID}}/text" class="stack card" data-autosave>
+        <input type="hidden" name="tab" value="{{.Tab}}">
+        <h2>Notes</h2>
+        <label>Campaign notes <textarea name="notes" rows="14">{{.C.Notes}}</textarea></label>
+        <div class="save-row"><button class="button button-small">Save</button> <span class="save-state" data-save-state aria-live="polite"></span></div>
+    </form>
+    <div class="card no-print">
+        <h2>Delete character</h2>
+        <form method="post" action="/sheets/{{.C.ID}}/delete" class="inline-form" data-no-swap>
+            <label class="check"><input type="checkbox" name="confirm" value="yes" required> Delete {{.C.Name}} permanently. This can't be undone.</label>
+            <button class="button button-small button-danger">Delete</button>
+        </form>
+    </div>
+</section>
+
+<section class="tab-panel {{if eq .Tab "rolls"}}active{{end}}" data-panel="rolls">
+    <div class="card">
+        <h2>Roll log</h2>
+        {{if .Rolls}}
+        <ul class="roll-log">
+            {{range .Rolls}}
+            <li>
+                <span class="hint">{{unix .CreatedAt}}</span>
+                <span>{{.Label}}</span>
+                {{if .HasTotal}}<strong>{{.Total}}</strong>{{end}}
+                <span class="hint">{{.Detail}}</span>
+            </li>
+            {{end}}
+        </ul>
+        {{else}}<p>No rolls yet.</p>{{end}}
+    </div>
+</section>
+{{end}}
+
+{{define "item-fields"}}
+<div class="field-grid">
+    <label>Name <input name="name" value="{{.Name}}" maxlength="100" required></label>
+    <label>Type
+        <select name="kind">
+            <option value="gear" {{if eq .Kind "gear"}}selected{{end}}>Gear</option>
+            <option value="weapon" {{if eq .Kind "weapon"}}selected{{end}}>Weapon</option>
+            <option value="armor" {{if eq .Kind "armor"}}selected{{end}}>Armor</option>
+            <option value="shield" {{if eq .Kind "shield"}}selected{{end}}>Shield</option>
+            <option value="magic" {{if eq .Kind "magic"}}selected{{end}}>Magic item</option>
+            <option value="tool" {{if eq .Kind "tool"}}selected{{end}}>Tool</option>
+            <option value="mount" {{if eq .Kind "mount"}}selected{{end}}>Mount or vehicle</option>
+        </select>
+    </label>
+    <label>Quantity <input type="number" name="qty" min="0" value="{{.Qty}}"></label>
+    <label>Weight (lb) <input type="number" step="any" min="0" name="weight" value="{{.Weight}}"></label>
+    <label>Cost <input name="cost" value="{{.Cost}}" maxlength="40"></label>
+    <label>Magic bonus <input type="number" name="magic_bonus" value="{{.MagicBonus}}"></label>
+    <label>AC bonus when active <input type="number" name="ac_bonus" value="{{.ACBonus}}"></label>
+    <label>Damage dice <input name="damage_dice" value="{{.DamageDice}}" maxlength="40" placeholder="1d8"></label>
+    <label>Damage type <input name="damage_type" value="{{.DamageType}}" maxlength="40"></label>
+    <label>Two-handed dice <input name="two_handed_dice" value="{{.TwoHandedDice}}" maxlength="40"></label>
+    <label>Weapon category
+        <select name="weapon_category">
+            <option value="" {{if not .WeaponCategory}}selected{{end}}>None</option>
+            <option value="Simple" {{if eq .WeaponCategory "Simple"}}selected{{end}}>Simple</option>
+            <option value="Martial" {{if eq .WeaponCategory "Martial"}}selected{{end}}>Martial</option>
+        </select>
+    </label>
+    <label>Weapon reach
+        <select name="weapon_range">
+            <option value="Melee" {{if ne .WeaponRange "Ranged"}}selected{{end}}>Melee</option>
+            <option value="Ranged" {{if eq .WeaponRange "Ranged"}}selected{{end}}>Ranged</option>
+        </select>
+    </label>
+    <label>Range <input name="range_text" value="{{.RangeText}}" maxlength="40"></label>
+    <label>Properties <input name="properties" value="{{.Properties}}" maxlength="200" placeholder="Finesse, Light"></label>
+    <label>Armor category
+        <select name="armor_category">
+            <option value="" {{if not .ArmorCategory}}selected{{end}}>None</option>
+            <option value="Light" {{if eq .ArmorCategory "Light"}}selected{{end}}>Light</option>
+            <option value="Medium" {{if eq .ArmorCategory "Medium"}}selected{{end}}>Medium</option>
+            <option value="Heavy" {{if eq .ArmorCategory "Heavy"}}selected{{end}}>Heavy</option>
+            <option value="Shield" {{if eq .ArmorCategory "Shield"}}selected{{end}}>Shield</option>
+        </select>
+    </label>
+    <label>Base AC <input type="number" name="armor_base" min="0" value="{{.ArmorBase}}"></label>
+    <label>Max Dex bonus (0 for no cap) <input type="number" name="armor_max_dex" min="0" value="{{.ArmorMaxDex}}"></label>
+    <label>Strength required <input type="number" name="str_min" min="0" value="{{.StrMin}}"></label>
+</div>
+<div class="check-grid">
+    <label class="check"><input type="checkbox" name="requires_attunement" value="1" {{if .RequiresAttunement}}checked{{end}}> Needs attunement</label>
+    <label class="check"><input type="checkbox" name="armor_dex" value="1" {{if .ArmorDex}}checked{{end}}> Adds Dex to AC</label>
+    <label class="check"><input type="checkbox" name="stealth_dis" value="1" {{if .StealthDis}}checked{{end}}> Stealth disadvantage</label>
+    <label class="check"><input type="checkbox" name="force_proficient" value="1" {{if .ForceProficient}}checked{{end}}> Always proficient</label>
+</div>
+<label>Description <textarea name="description" rows="3">{{.Description}}</textarea></label>
+{{end}}
+
+{{define "spell-results"}}
+{{if .Searched}}
+<p class="hint">{{if gt .Total (len .Rows)}}Showing {{len .Rows}} of {{.Total}} spells. Narrow your search to see more.{{else}}{{.Total}} spells found.{{end}}</p>
+{{$r := .}}
+<ul class="result-list">
+    {{range .Rows}}
+    <li>
+        <details class="detail" data-dialog>
+            <summary>{{.Name}} <span class="hint">{{if .Level}}level {{.Level}}{{else}}cantrip{{end}}, {{.School}}</span></summary>
+            <div class="detail-body">
+                <h3>{{.Name}}</h3>
+                <p class="hint">{{.School}}. {{.CastingTime}}. {{.Range}}. {{.Components}}. {{.Duration}}.</p>
+                <p class="prose">{{.Desc}}</p>
+                {{if .Higher}}<p class="prose"><strong>At higher levels:</strong> {{.Higher}}</p>{{end}}
+            </div>
+        </details>
+        <form method="post" action="/sheets/{{$r.SheetID}}/spell/add" class="roll-form">
+            <input type="hidden" name="tab" value="{{$r.Tab}}">
+            <input type="hidden" name="srd" value="{{.Index}}">
+            {{if gt (len $r.Casters) 1}}
+            {{$src := .Source}}
+            <select name="source_class" aria-label="Class for {{.Name}}">
+                {{range $r.Casters}}<option value="{{.Class}}" {{if eq .Class $src}}selected{{end}}>{{.ClassName}}</option>{{end}}
+            </select>
+            {{end}}
+            <button class="chip">Add</button>
+        </form>
+    </li>
+    {{end}}
+</ul>
+{{end}}
+{{end}}
+
+{{define "item-results"}}
+{{if .Searched}}
+<p class="hint">{{if gt .Total (len .Rows)}}Showing {{len .Rows}} of {{.Total}} items. Narrow your search to see more.{{else}}{{.Total}} items found.{{end}}</p>
+{{$r := .}}
+<ul class="result-list">
+    {{range .Rows}}
+    <li>
+        <details class="detail" data-dialog>
+            <summary>{{.Name}} <span class="hint">{{.Category}}{{if .Rarity}}, {{.Rarity}}{{end}}{{if .Cost}}, {{.Cost}}{{end}}</span></summary>
+            <div class="detail-body">
+                <h3>{{.Name}}</h3>
+                <p class="hint">{{if .Weight}}{{pounds .Weight}} lb. {{end}}{{if .DamageDice}}{{.DamageDice}} {{.DamageType}}. {{end}}{{if .ArmorBase}}AC {{.ArmorBase}}. {{end}}</p>
+                {{if .Desc}}<p class="prose">{{.Desc}}</p>{{end}}
+            </div>
+        </details>
+        <form method="post" action="/sheets/{{$r.SheetID}}/item/add" class="roll-form">
+            <input type="hidden" name="tab" value="{{$r.Tab}}">
+            <input type="hidden" name="srd" value="{{.Index}}">
+            <button class="chip">Add</button>
+        </form>
+    </li>
+    {{end}}
+</ul>
+{{end}}
+{{end}}

@@ -1,0 +1,71 @@
+{{define "title"}}Admin{{end}}
+
+{{define "tbTitle"}}Admin Dashboard{{end}}
+
+{{define "content"}}
+<main class="panel-page">
+    {{template "authnav" .}}
+    {{if .Created}}
+    <div class="banner banner-info" role="status">
+        <p>Account <strong>{{.Created}}</strong> created.</p>
+        {{if .TempPass}}<p>Temporary password: <code>{{.TempPass}}</code>. This is shown once. They'll have to change it when they first log in.</p>{{end}}
+    </div>
+    {{end}}
+
+    <section class="card">
+        <h2>Add a player</h2>
+        <form method="post" action="/admin/players" class="inline-form">
+            <label>Username <input name="username" value="{{.Username}}" autocapitalize="none" autocomplete="off" required pattern="[A-Za-z0-9][A-Za-z0-9_\-]{2,31}" title="3 to 32 characters: letters, numbers, - or _"></label>
+            <label>Temporary password <input name="password" type="text" autocomplete="off" minlength="8" maxlength="72" placeholder="Blank to generate one"></label>
+            <label>Role
+                <select name="role">
+                    <option value="player" {{if ne .Role "admin"}}selected{{end}}>Player</option>
+                    <option value="admin" {{if eq .Role "admin"}}selected{{end}}>Admin</option>
+                </select>
+            </label>
+            <button type="submit" class="button">Add</button>
+        </form>
+    </section>
+
+    <section class="card">
+        <h2>Accounts</h2>
+        <div class="table-wrap">
+        <table>
+            <thead><tr><th>Username</th><th>Role</th><th>Status</th><th>Joined</th></tr></thead>
+            <tbody>
+                {{range .Users}}
+                <tr>
+                    <td><a href="/admin/players/{{.ID}}">{{.Username}}</a></td>
+                    <td>{{.Role}}</td>
+                    <td>{{if .Disabled}}Disabled{{else if .MustChange}}Temporary password{{else}}Active{{end}}</td>
+                    <td>{{date .CreatedAt}}</td>
+                </tr>
+                {{end}}
+            </tbody>
+        </table>
+        </div>
+    </section>
+
+    <section class="card">
+        <h2>All characters</h2>
+        {{if .Characters}}
+        <div class="table-wrap">
+        <table>
+            <thead><tr><th>Character</th><th>Player</th><th>Race</th><th>Classes</th><th>Level</th></tr></thead>
+            <tbody>
+                {{range .Characters}}
+                <tr>
+                    <td><a href="/sheets/{{.ID}}">{{.Name}}</a></td>
+                    <td><a href="/admin/players/{{.UserID}}">{{.Owner}}</a></td>
+                    <td>{{.RaceName}}</td>
+                    <td>{{.Classes}}</td>
+                    <td>{{.Level}}</td>
+                </tr>
+                {{end}}
+            </tbody>
+        </table>
+        </div>
+        {{else}}<p>No characters yet.</p>{{end}}
+    </section>
+</main>
+{{end}}

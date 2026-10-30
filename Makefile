@@ -17,3 +17,8 @@ updateSubmodule:
 
 full: updateAll build
 	./bin/warofages
+
+
+# Rebuilds internal/srd/data from the pinned 5e-database commit
+srd:
+	go run ./internal/srd/gen

@@ -1,0 +1,67 @@
+{{define "title"}}Level Up {{.C.Name}}{{end}}
+
+{{define "tbTitle"}}Level Up {{.C.Name}}{{end}}
+
+{{define "content"}}
+<main class="panel-page narrow">
+    {{template "authnav" .}}
+    <p><a href="/sheets/{{.C.ID}}">Back to the sheet</a></p>
+    <p>{{.C.Name}} is level {{.D.Level}}: {{.ClassLine}}.</p>
+    {{if ge .D.Level 20}}
+    <p>This character is already at level 20.</p>
+    {{else}}
+    <form method="post" action="/sheets/{{.C.ID}}/levelup" class="stack">
+        <section class="card">
+            <h2>Class</h2>
+            {{range .Options}}
+            <label class="check {{if .Blocked}}muted{{end}}">
+                <input type="radio" name="class" value="{{.Class.Index}}" {{if .Blocked}}disabled{{end}} {{if and .Current (not .Blocked)}}checked{{end}} required>
+                <span>{{.Class.Name}} {{.Next}}{{if not .Current}} (new){{end}}{{if .HasASI}}, ability score improvement{{end}}
+                {{if .Blocked}}<span class="hint">{{.Blocked}}</span>{{end}}</span>
+            </label>
+            {{end}}
+        </section>
+
+        <section class="card">
+            <h2>Subclass</h2>
+            <p class="hint">Only needed for the class you're levelling, once its level allows one.</p>
+            {{range .Options}}
+            {{if and .Subclasses (not .Blocked)}}
+            {{$current := .Subclass}}
+            <label>{{.Class.Name}}
+                <select name="subclass_{{.Class.Index}}">
+                    <option value="">{{if $current}}Keep current{{else}}Choose later{{end}}</option>
+                    {{range .Subclasses}}<option value="{{.Index}}" {{if eq .Index $current}}selected{{end}}>{{.Name}} ({{.Flavor}})</option>{{end}}
+                </select>
+            </label>
+            {{end}}
+            {{end}}
+        </section>
+
+        <section class="card">
+            <h2>Hit points</h2>
+            <label class="check"><input type="radio" name="hp_method" value="average" checked> Take the average</label>
+            <label class="check"><input type="radio" name="hp_method" value="roll"> Roll the hit die</label>
+            <label class="check"><input type="radio" name="hp_method" value="manual"> Use my own roll</label>
+            <label>My roll <input type="number" name="hp_manual" min="1" max="12"></label>
+            <p class="hint">Your Constitution modifier is added for you.</p>
+        </section>
+
+        <section class="card">
+            <h2>Ability score improvement</h2>
+            <p class="hint">Only applies when the level grants one. Pick one ability for +1 twice, or the same one twice for +2. Scores stop at 20. Took a feat instead? Leave these blank and add it as a custom feature.</p>
+            <div class="field-grid">
+                <label>First +1
+                    <select name="asi_1"><option value="">None</option>{{range .Abilities}}<option value="{{.}}">{{index $.Names .}}</option>{{end}}</select>
+                </label>
+                <label>Second +1
+                    <select name="asi_2"><option value="">None</option>{{range .Abilities}}<option value="{{.}}">{{index $.Names .}}</option>{{end}}</select>
+                </label>
+            </div>
+        </section>
+
+        <button type="submit" class="button button-primary">Level up</button>
+    </form>
+    {{end}}
+</main>
+{{end}}

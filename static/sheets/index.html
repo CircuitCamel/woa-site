@@ -1,0 +1,17 @@
+{{define "title"}}My Characters{{end}}
+
+{{define "tbTitle"}}My Characters{{end}}
+
+{{define "content"}}
+<main class="panel-page">
+    {{template "authnav" .}}
+    <div class="buttondiv">
+        {{range .Characters}}
+        <a href="/sheets/{{.ID}}" class="button">{{.Name}}<span class="button-sub">{{.RaceName}}, {{.Classes}}</span></a>
+        {{else}}
+        <p>You don't have any characters yet.</p>
+        {{end}}
+        <a href="/sheets/new" class="button button-primary">Create a character</a>
+    </div>
+</main>
+{{end}}

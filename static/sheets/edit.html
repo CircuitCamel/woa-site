@@ -1,0 +1,106 @@
+{{define "title"}}Edit {{.C.Name}}{{end}}
+
+{{define "tbTitle"}}Edit {{.C.Name}}{{end}}
+
+{{define "content"}}
+<main class="panel-page">
+    {{template "authnav" .}}
+    <p><a href="/sheets/{{.C.ID}}">Back to the sheet</a></p>
+    <form method="post" action="/sheets/{{.C.ID}}/edit" class="stack">
+        <section class="card">
+            <h2>Basics</h2>
+            <div class="field-grid">
+                <label>Name <input name="name" value="{{.C.Name}}" maxlength="100" required></label>
+                <label>Race <input name="race_name" value="{{.C.RaceName}}" maxlength="100"></label>
+                <label>Background <input name="background" value="{{.C.Background}}" maxlength="100"></label>
+                <label>Alignment
+                    <select name="alignment">{{range .Alignments}}<option {{if eq . $.C.Alignment}}selected{{end}}>{{.}}</option>{{end}}</select>
+                </label>
+                <label>Size
+                    <select name="size">{{range .Sizes}}<option {{if eq . $.C.Size}}selected{{end}}>{{.}}</option>{{end}}</select>
+                </label>
+                <label>Experience <input type="number" name="experience" min="0" value="{{.C.Experience}}"></label>
+            </div>
+        </section>
+
+        <section class="card">
+            <h2>Classes</h2>
+            {{range .Classes}}
+            <div class="field-grid">
+                <label>{{.Name}} level <input type="number" name="level_{{.Entry.Index}}" min="0" max="20" value="{{.Entry.Level}}"></label>
+                <label>Subclass
+                    <select name="subclass_{{.Entry.Index}}">
+                        <option value="">None</option>
+                        {{$current := .Entry.Subclass}}
+                        {{range .Subclasses}}<option value="{{.Index}}" {{if eq .Index $current}}selected{{end}}>{{.Name}}</option>{{end}}
+                    </select>
+                </label>
+            </div>
+            {{end}}
+            <p class="hint">Use Level Up to gain levels normally. Setting a level to 0 removes that class. Lowering a level here doesn't change hit points; adjust them below.</p>
+        </section>
+
+        <section class="card">
+            <h2>Ability scores</h2>
+            <div class="table-wrap">
+            <table>
+                <thead><tr><th>Ability</th><th>Base</th><th>Bonus</th><th>Save proficiency</th></tr></thead>
+                <tbody>
+                    {{range .Abilities}}
+                    <tr>
+                        <td>{{.Name}}</td>
+                        <td><input type="number" name="base_{{.Key}}" min="1" max="30" value="{{.Base}}" aria-label="{{.Name}} base score"></td>
+                        <td><input type="number" name="bonus_{{.Key}}" min="-30" max="30" value="{{.Bonus}}" aria-label="{{.Name}} bonus"></td>
+                        <td><input type="checkbox" name="save_{{.Key}}" value="1" {{if .Save}}checked{{end}} aria-label="{{.Name}} save proficiency"></td>
+                    </tr>
+                    {{end}}
+                </tbody>
+            </table>
+            </div>
+            <p class="hint">Bonus holds racial bonuses and ability score improvements.</p>
+        </section>
+
+        <section class="card">
+            <h2>Skills</h2>
+            <div class="field-grid">
+                {{range .Skills}}
+                <label>{{.Name}}
+                    <select name="skill_{{.Index}}">
+                        <option value="none" {{if eq .Level "none"}}selected{{end}}>Not proficient</option>
+                        <option value="proficient" {{if eq .Level "proficient"}}selected{{end}}>Proficient</option>
+                        <option value="expertise" {{if eq .Level "expertise"}}selected{{end}}>Expertise</option>
+                    </select>
+                </label>
+                {{end}}
+            </div>
+        </section>
+
+        <section class="card">
+            <h2>Other proficiencies</h2>
+            <p class="hint">One per line. Armor uses names like Light Armor or Shields, and weapons use Simple Weapons, Martial Weapons, or a specific weapon.</p>
+            <label>Armor <textarea name="armor" rows="3">{{.Armor}}</textarea></label>
+            <label>Weapons <textarea name="weapons" rows="3">{{.Weapons}}</textarea></label>
+            <label>Tools <textarea name="tools" rows="2">{{.Tools}}</textarea></label>
+            <label>Languages <textarea name="languages" rows="2">{{.Languages}}</textarea></label>
+            <label>Other <textarea name="other" rows="2">{{.Other}}</textarea></label>
+        </section>
+
+        <section class="card">
+            <h2>Hit points and bonuses</h2>
+            <div class="field-grid">
+                <label>Hit dice total <input type="number" name="hp_base" min="0" value="{{.C.HPBase}}"></label>
+                <label>HP per level <input type="number" name="hp_per_level" value="{{.C.HPPerLevel}}"></label>
+                <label>Other max HP <input type="number" name="hp_bonus" value="{{.C.HPBonus}}"></label>
+                <label>Base speed <input type="number" name="speed" min="0" value="{{.C.Speed}}"></label>
+                <label>AC bonus <input type="number" name="ac_bonus" value="{{.C.ACBonus}}"></label>
+                <label>Initiative bonus <input type="number" name="init_bonus" value="{{.C.InitBonus}}"></label>
+                <label>Speed bonus <input type="number" name="speed_bonus" value="{{.C.SpeedBonus}}"></label>
+                <label>Save bonus <input type="number" name="save_bonus" value="{{.C.SaveBonus}}"></label>
+            </div>
+            <p class="hint">Hit dice total excludes Constitution, which is added per level automatically. Use these bonuses for homebrew, feats, and magic items.</p>
+        </section>
+
+        <button type="submit" class="button button-primary">Save changes</button>
+    </form>
+</main>
+{{end}}

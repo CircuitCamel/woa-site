@@ -1,0 +1,139 @@
+{{define "title"}}{{.C.Name}}{{end}}
+
+{{define "tbTitle"}}{{.C.Name}}{{end}}
+
+{{define "content"}}
+<main class="panel-page wide">
+    {{template "authnav" .}}
+    <div id="sheet-root" data-sheet="{{.C.ID}}" data-tab="{{.Tab}}">
+        {{template "sheet-body" .}}
+    </div>
+    <dialog id="detail-dialog" class="detail-dialog">
+        <div id="detail-dialog-body"></div>
+        <form method="dialog"><button type="submit" class="button">Close</button></form>
+    </dialog>
+    <div id="toasts" class="toasts" aria-live="polite"></div>
+    {{template "srd-note"}}
+    <script src="/static/scripts/sheet.js" defer></script>
+    <script src="/static/scripts/compendium.js" defer></script>
+</main>
+{{end}}
+
+{{define "rollbtns"}}
+<form class="roll-form" method="post" action="/sheets/{{.ID}}/roll">
+    <input type="hidden" name="tab" value="{{.Tab}}">
+    <input type="hidden" name="what" value="{{.What}}">
+    <button type="submit" class="chip" name="mode" value="" title="Roll">{{.Text}}</button>
+    <button type="submit" class="chip chip-small" name="mode" value="adv" title="Roll with advantage" aria-label="Roll with advantage">A</button>
+    <button type="submit" class="chip chip-small" name="mode" value="dis" title="Roll with disadvantage" aria-label="Roll with disadvantage">D</button>
+</form>
+{{end}}
+
+{{define "sheet-body"}}
+{{if .Error}}<p class="banner banner-error" role="alert">{{.Error}}</p>{{end}}
+{{if .Others}}<p class="banner banner-info">You're viewing {{.C.Owner}}'s character as an admin. Your changes save to their sheet.</p>{{end}}
+{{range .D.Warnings}}<p class="banner banner-warn">{{.}}</p>{{end}}
+{{if .D.Dead}}<p class="banner banner-error">This character is dead.</p>{{else if .D.Stable}}<p class="banner banner-warn">This character is unconscious but stable.</p>{{else if .D.Dying}}<p class="banner banner-error">This character is dying. Make death saving throws.</p>{{end}}
+
+<header class="sheet-header">
+    <div>
+        <p class="sheet-sub">{{.C.RaceName}}, {{.ClassLine}}</p>
+        <p class="sheet-sub">Level {{.D.Level}}{{if .C.Background}}, {{.C.Background}}{{end}}{{if .C.Alignment}}, {{.C.Alignment}}{{end}}{{if .C.Experience}}, {{.C.Experience}} XP{{end}}</p>
+    </div>
+    <div class="sheet-actions">
+        <a class="button button-small" href="/sheets/{{.C.ID}}/levelup">Level Up</a>
+        <a class="button button-small" href="/sheets/{{.C.ID}}/edit">Edit</a>
+        <form method="post" action="/sheets/{{.C.ID}}/rest"><input type="hidden" name="tab" value="{{.Tab}}"><button class="button button-small" name="kind" value="short">Short Rest</button></form>
+        <form method="post" action="/sheets/{{.C.ID}}/rest" data-confirm="Take a long rest? This restores hit points, slots and features."><input type="hidden" name="tab" value="{{.Tab}}"><button class="button button-small" name="kind" value="long">Long Rest</button></form>
+    </div>
+</header>
+
+{{with .LastRoll}}
+<div id="last-roll" class="last-roll" data-roll="{{.ID}}">
+    <span class="last-roll-label">{{.Label}}</span>
+    {{if .HasTotal}}<strong class="last-roll-total">{{.Total}}</strong>{{end}}
+    <span class="last-roll-detail">{{.Detail}}</span>
+</div>
+{{end}}
+
+<section class="stat-bar">
+    <div class="stat stat-hp">
+        <span class="stat-label">Hit Points</span>
+        <strong>{{.C.HPCurrent}} / {{.D.MaxHP}}</strong>
+        {{if .C.HPTemp}}<span class="stat-note">{{.C.HPTemp}} temp</span>{{end}}
+        <form method="post" action="/sheets/{{.C.ID}}/hp" class="hp-form">
+            <input type="hidden" name="tab" value="{{.Tab}}">
+            <input type="number" name="amount" min="0" value="1" aria-label="Amount" data-stepper>
+            <button class="chip" name="op" value="damage">Damage</button>
+            <button class="chip" name="op" value="heal">Heal</button>
+            <button class="chip" name="op" value="temp">Temp</button>
+        </form>
+    </div>
+    <div class="stat" title="{{.D.ACDetail}}"><span class="stat-label">Armor Class</span><strong>{{.D.AC}}</strong><span class="stat-note">{{.D.ACDetail}}</span></div>
+    <div class="stat"><span class="stat-label">Initiative</span>{{template "rollbtns" (dict "ID" .C.ID "Tab" .Tab "What" "initiative" "Text" (signed .D.Initiative))}}</div>
+    <div class="stat"><span class="stat-label">Speed</span><strong>{{.D.Speed}} ft</strong></div>
+    <div class="stat"><span class="stat-label">Proficiency</span><strong>{{signed .D.ProfBonus}}</strong></div>
+    <div class="stat">
+        <span class="stat-label">Inspiration</span>
+        <form method="post" action="/sheets/{{.C.ID}}/inspiration"><input type="hidden" name="tab" value="{{.Tab}}"><button class="chip {{if .C.Inspiration}}chip-on{{end}}" aria-pressed="{{.C.Inspiration}}">{{if .C.Inspiration}}Inspired{{else}}None{{end}}</button></form>
+    </div>
+</section>
+
+{{if le .C.HPCurrent 0}}
+<section class="card death-saves">
+    <h2>Death saves</h2>
+    <p>Successes: {{.C.DeathSuccesses}} of 3. Failures: {{.C.DeathFailures}} of 3.</p>
+    <form method="post" action="/sheets/{{.C.ID}}/death" class="inline-form">
+        <input type="hidden" name="tab" value="{{.Tab}}">
+        <button class="button button-small" name="op" value="roll">Roll death save</button>
+        <button class="button button-small" name="op" value="reset">Reset</button>
+    </form>
+</section>
+{{end}}
+
+<section class="ability-row">
+    {{range .D.Abilities}}
+    <div class="ability">
+        <span class="ability-name">{{.Name}}</span>
+        {{template "rollbtns" (dict "ID" $.C.ID "Tab" $.Tab "What" (printf "check:%s" .Key) "Text" (signed .Mod))}}
+        <span class="ability-score">{{.Score}}</span>
+    </div>
+    {{end}}
+</section>
+
+<div class="sheet-columns">
+    <aside class="sheet-side">
+        <section class="card">
+            <h2>Saving throws</h2>
+            <ul class="roll-list">
+                {{range .D.Abilities}}
+                <li class="{{if .SaveProf}}is-prof{{end}}"><span>{{if .SaveProf}}<span class="prof-mark" title="Proficient">●</span> {{end}}{{.Name}}</span>{{template "rollbtns" (dict "ID" $.C.ID "Tab" $.Tab "What" (printf "save:%s" .Key) "Text" (signed .Save))}}</li>
+                {{end}}
+            </ul>
+        </section>
+        <section class="card">
+            <h2>Skills</h2>
+            <ul class="roll-list">
+                {{range .D.Skills}}
+                <li><span>{{if .Expertise}}<span class="prof-mark" title="Expertise">◆</span> {{else if .Prof}}<span class="prof-mark" title="Proficient">●</span> {{else if .Half}}<span class="prof-mark" title="Half proficiency">◦</span> {{end}}{{.Name}} <span class="hint">{{upper .Ability}}{{if .Disadvantage}}, armor gives disadvantage{{end}}</span></span>{{template "rollbtns" (dict "ID" $.C.ID "Tab" $.Tab "What" (printf "skill:%s" .Index) "Text" (signed .Bonus))}}</li>
+                {{end}}
+            </ul>
+        </section>
+        <section class="card">
+            <h2>Senses</h2>
+            <ul class="plain-list">{{range .D.Passives}}<li>Passive {{.Name}} <strong>{{.Value}}</strong></li>{{end}}</ul>
+        </section>
+        <section class="card">
+            <h2>Proficiencies</h2>
+            {{range .ProfGroups}}<p><strong>{{.Label}}:</strong> {{.Names}}</p>{{else}}<p class="hint">None yet.</p>{{end}}
+        </section>
+    </aside>
+
+    <div class="sheet-main">
+        <nav class="tabs" aria-label="Sheet sections">
+            {{range .Tabs}}<a href="/sheets/{{$.C.ID}}?tab={{.Key}}" class="tab {{if eq .Key $.Tab}}active{{end}}" data-tab-link="{{.Key}}" {{if eq .Key $.Tab}}aria-current="page"{{end}}>{{.Label}}</a>{{end}}
+        </nav>
+        {{template "panels" .}}
+    </div>
+</div>
+{{end}}

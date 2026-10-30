@@ -1,0 +1,16 @@
+{{define "title"}}Log In{{end}}
+
+{{define "tbTitle"}}Log In{{end}}
+
+{{define "content"}}
+<main class="panel-page narrow">
+    {{template "authnav" .}}
+    <p>Character sheets are for players in the campaign. Ask your DM if you need an account.</p>
+    <form method="post" action="/login" class="stack">
+        <input type="hidden" name="next" value="{{.Next}}">
+        <label>Username <input name="username" value="{{.Username}}" autocomplete="username" autocapitalize="none" required autofocus></label>
+        <label>Password <input type="password" name="password" autocomplete="current-password" required></label>
+        <button type="submit" class="button">Log in</button>
+    </form>
+</main>
+{{end}}

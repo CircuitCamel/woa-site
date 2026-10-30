@@ -1,0 +1,18 @@
+{{define "authnav"}}
+<nav class="auth-nav" aria-label="Account">
+    {{with .User}}
+    {{if not .MustChange}}
+    <a href="/sheets">My Characters</a>
+    {{if .IsAdmin}}<a href="/admin">Admin</a>{{end}}
+    {{end}}
+    <a href="/account">{{.Username}}</a>
+    <form method="post" action="/logout"><button type="submit" class="link-button">Log out</button></form>
+    {{end}}
+</nav>
+{{if .Error}}<p class="banner banner-error" role="alert">{{.Error}}</p>{{end}}
+{{if .Info}}<p class="banner banner-info" role="status">{{.Info}}</p>{{end}}
+{{end}}
+
+{{define "srd-note"}}
+<p class="srd-note">This work includes material taken from the System Reference Document 5.1 ("SRD 5.1") by Wizards of the Coast LLC, available at <a href="https://dnd.wizards.com/resources/systems-reference-document">dnd.wizards.com</a>. The SRD 5.1 is licensed under the <a href="https://creativecommons.org/licenses/by/4.0/legalcode">Creative Commons Attribution 4.0 International License</a>.</p>
+{{end}}

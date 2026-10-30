@@ -1,0 +1,49 @@
+{{define "title"}}{{.Player.Username}}{{end}}
+
+{{define "tbTitle"}}{{.Player.Username}}{{end}}
+
+{{define "content"}}
+<main class="panel-page">
+    {{template "authnav" .}}
+    {{if .TempPass}}<p class="banner banner-info">Temporary password: <code>{{.TempPass}}</code>. This is shown once.</p>{{end}}
+
+    <section class="card">
+        <h2>Account</h2>
+        <p>Role: {{.Player.Role}}. Status: {{if .Player.Disabled}}disabled{{else if .Player.MustChange}}temporary password{{else}}active{{end}}. Joined {{date .Player.CreatedAt}}.</p>
+    </section>
+
+    <section class="card">
+        <h2>Reset password</h2>
+        <form method="post" action="/admin/players/{{.Player.ID}}/reset" class="inline-form">
+            <label>Temporary password <input name="password" type="text" autocomplete="off" minlength="8" maxlength="72" placeholder="Blank to generate one"></label>
+            <button type="submit" class="button">Reset</button>
+        </form>
+        <p class="hint">This logs them out everywhere.</p>
+    </section>
+
+    {{if not .IsSelf}}
+    <section class="card">
+        <h2>Access</h2>
+        {{if .Player.Disabled}}
+        <form method="post" action="/admin/players/{{.Player.ID}}/enable"><button type="submit" class="button">Enable account</button></form>
+        {{else}}
+        <form method="post" action="/admin/players/{{.Player.ID}}/disable"><button type="submit" class="button">Disable account</button></form>
+        {{end}}
+        <h3>Delete account</h3>
+        <form method="post" action="/admin/players/{{.Player.ID}}/delete" class="inline-form">
+            <label class="check"><input type="checkbox" name="confirm" value="yes" required> Also deletes all of their characters. This can't be undone.</label>
+            <button type="submit" class="button button-danger">Delete</button>
+        </form>
+    </section>
+    {{end}}
+
+    <section class="card">
+        <h2>Characters</h2>
+        {{if .Characters}}
+        <ul class="plain-list">
+            {{range .Characters}}<li><a href="/sheets/{{.ID}}">{{.Name}}</a> {{.RaceName}}, {{.Classes}}</li>{{end}}
+        </ul>
+        {{else}}<p>No characters yet.</p>{{end}}
+    </section>
+</main>
+{{end}}
